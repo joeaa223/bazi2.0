@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>八字命理 · 探索你的人生密码</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* 背景装饰 */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .container {
+      background: rgba(26, 26, 46, 0.9);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 1000px;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: #a0aec0;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-label i {
+      color: #00d4ff;
+      font-size: 1rem;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: #00d4ff;
+      box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .form-input:disabled, .form-select:disabled {
+      background: rgba(255, 255, 255, 0.05);
+      color: #718096;
+      cursor: not-allowed;
+    }
+
+    .gender-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .gender-option {
+      position: relative;
+    }
+
+    .gender-radio {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .gender-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+      font-weight: 500;
+      gap: 8px;
+    }
+
+    .gender-radio:checked + .gender-label {
+      border-color: #00d4ff;
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+    }
+
+    .date-time-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(0, 212, 255, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .submit-btn:hover::before {
+      left: 100%;
+    }
+
+    .result-section {
+      margin-top: 32px;
+      padding: 24px;
+      background: rgba(26, 26, 46, 0.8);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: none;
+    }
+
+    .result-section.show {
+      display: block;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .result-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .result-content {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      max-height: none;
+      overflow-y: visible;
+      color: #e2e8f0;
+    }
+
+    .bazi-info {
+      margin-bottom: 24px;
+    }
+
+    .basic-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+    }
+
+    .info-item {
+      text-align: center;
+    }
+
+    .info-label {
+      font-size: 0.8rem;
+      color: #a0aec0;
+      margin-bottom: 4px;
+      font-family: 'SimSun', '宋体', serif;
+    }
+
+    .info-value {
+      font-weight: 600;
+      color: #ffffff;
+      font-size: 0.9rem;
+      font-family: 'SimSun', '宋体', serif;
+    }
+
+    .pillars-section {
+      margin-top: 24px;
+    }
+
+    .pillars-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 16px;
+      font-family: 'SimSun', '宋体', serif;
+    }
+
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .pillar-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .pillar-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+    }
+
+    .pillar-header {
+      font-size: 0.8rem;
+      color: #a0aec0;
+      margin-bottom: 8px;
+      font-family: 'SimSun', '宋体', serif;
+    }
+
+    .pillar-main {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+      font-family: 'SimSun', '宋体', serif;
+    }
+
+    .pillar-details {
+      font-size: 0.75rem;
+      line-height: 1.4;
+      font-family: 'SimSun', '宋体', serif;
+      color: #e2e8f0;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .detail-label {
+      color: #a0aec0;
+      font-size: 20px;
+      font-family: 'SimSun', '宋体', serif;
+    }
+
+    .detail-value {
+      font-weight: 500;
+      color: #ffffff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 20px;
+      font-family: 'SimSun', '宋体', serif;
+    }
+
+    /* 五行颜色 */
+    .element-wood { background: #c6f6d5; color: #22543d; }
+    .element-fire { background: #fed7d7; color: #742a2a; }
+    .element-earth { background: #faf089; color: #744210; }
+    .element-metal { background: #e2e8f0; color: #2d3748; }
+    .element-water { background: #bee3f8; color: #2a4365; }
+
+    /* 十神颜色 */
+    .tenshen { 
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      color: white;
+      font-weight: 600;
+    }
+
+    .dayun-section {
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+
+    .dayun-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      font-family: 'SimSun', '宋体', serif;
+    }
+
+    .dayun-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .dayun-item {
+      text-align: center;
+    }
+
+    .dayun-label {
+      font-size: 0.8rem;
+      opacity: 0.9;
+      margin-bottom: 4px;
+      font-family: 'SimSun', '宋体', serif;
+    }
+
+    .dayun-value {
+      font-weight: 600;
+      font-size: 0.9rem;
+      font-family: 'SimSun', '宋体', serif;
+    }
+
+         .action-buttons {
+       display: flex;
+       gap: 12px;
+       margin-top: 20px;
+     }
+
+     .action-btn {
+       flex: 1;
+       padding: 14px 20px;
+       border: none;
+       border-radius: 10px;
+       font-weight: 600;
+       cursor: pointer;
+       transition: all 0.3s ease;
+       text-decoration: none;
+       text-align: center;
+       display: inline-block;
+     }
+
+     .btn-chat {
+       background: linear-gradient(135deg, #48bb78, #38a169);
+       color: white;
+     }
+
+     .btn-report {
+       background: linear-gradient(135deg, #ed8936, #dd6b20);
+       color: white;
+     }
+
+     .btn-edit {
+       background: linear-gradient(135deg, #9f7aea, #805ad5);
+       color: white;
+     }
+
+     .btn-report2 {
+       background: linear-gradient(135deg, #3182ce, #2b6cb0);
+       color: white;
+     }
+
+     .action-btn:hover {
+       transform: translateY(-2px);
+       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+     }
+
+     .loading {
+       display: inline-flex;
+       align-items: center;
+       gap: 8px;
+       color: #00d4ff;
+     }
+
+     .spinner {
+       width: 16px;
+       height: 16px;
+       border: 2px solid rgba(255, 255, 255, 0.2);
+       border-top: 2px solid #00d4ff;
+       border-radius: 50%;
+       animation: spin 1s linear infinite;
+     }
+
+     @keyframes spin {
+       0% { transform: rotate(0deg); }
+       100% { transform: rotate(360deg); }
+     }
+
+     .error {
+       color: #fed7d7;
+       background: rgba(229, 62, 62, 0.2);
+       padding: 12px 16px;
+       border-radius: 8px;
+       margin-top: 16px;
+       border: 1px solid rgba(229, 62, 62, 0.3);
+     }
+
+     /* 响应式调整 */
+     @media (max-width: 768px) {
+       body {
+         background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+         padding: 0;
+         margin: 0;
+       }
+       
+       body::before {
+         display: block;
+       }
+       
+       .container {
+         background: rgba(26, 26, 46, 0.9);
+         backdrop-filter: blur(20px);
+         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+         border: 1px solid rgba(255, 255, 255, 0.1);
+         padding: 20px;
+         margin: 20px;
+         width: calc(100% - 40px);
+         max-width: none;
+       }
+       
+       .header {
+         margin-bottom: 30px;
+       }
+       
+       .logo {
+         font-size: 2.5rem;
+       }
+       
+       .title {
+         font-size: 1.8rem;
+       }
+       
+       .subtitle {
+         font-size: 0.9rem;
+       }
+       
+       .form-group {
+         margin-bottom: 20px;
+       }
+       
+       .form-label {
+         font-size: 0.85rem;
+       }
+       
+       .form-input, .form-select {
+         padding: 12px 16px;
+         font-size: 0.9rem;
+       }
+       
+       .gender-group {
+         gap: 12px;
+       }
+       
+       .gender-label {
+         padding: 10px 16px;
+         font-size: 0.9rem;
+       }
+       
+       .submit-btn {
+         padding: 14px 20px;
+         font-size: 1rem;
+       }
+       
+       .result-section {
+         padding: 20px;
+         margin-top: 20px;
+       }
+       
+       .result-title {
+         font-size: 1.3rem;
+       }
+       
+       .action-buttons {
+         flex-direction: column;
+         gap: 12px;
+       }
+       
+       .action-btn {
+         padding: 12px 16px;
+         font-size: 0.9rem;
+       }
+     }
+
+     @media (max-width: 640px) {
+       body {
+         background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+         padding: 0;
+         margin: 0;
+       }
+       
+       body::before {
+         display: block;
+       }
+       
+       .container {
+         background: rgba(26, 26, 46, 0.9);
+         backdrop-filter: blur(20px);
+         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+         border: 1px solid rgba(255, 255, 255, 0.1);
+         padding: 15px;
+         margin: 15px;
+         width: calc(100% - 30px);
+         max-width: none;
+       }
+       
+       .header {
+         margin-bottom: 25px;
+       }
+       
+       .logo {
+         font-size: 2.2rem;
+       }
+       
+       .title {
+         font-size: 1.5rem;
+       }
+       
+       .subtitle {
+         font-size: 0.85rem;
+       }
+       
+       .form-group {
+         margin-bottom: 18px;
+       }
+       
+       .form-label {
+         font-size: 0.8rem;
+       }
+       
+       .form-input, .form-select {
+         padding: 10px 14px;
+         font-size: 0.85rem;
+       }
+       
+       .gender-group {
+         gap: 10px;
+       }
+       
+       .gender-label {
+         padding: 8px 12px;
+         font-size: 0.85rem;
+       }
+       
+       .submit-btn {
+         padding: 12px 18px;
+         font-size: 0.9rem;
+       }
+       
+       .result-section {
+         padding: 15px;
+         margin-top: 15px;
+       }
+       
+       .result-title {
+         font-size: 1.2rem;
+       }
+       
+       .bazi-info {
+         gap: 15px;
+       }
+       
+       .basic-info {
+         grid-template-columns: repeat(2, 1fr);
+         gap: 12px;
+       }
+       
+       .info-item {
+         padding: 10px;
+       }
+       
+       .info-label {
+         font-size: 0.75rem;
+       }
+       
+       .info-value {
+         font-size: 0.85rem;
+       }
+       
+       .pillars-grid {
+         grid-template-columns: repeat(2, 1fr);
+         gap: 12px;
+       }
+       
+       .pillar-card {
+         padding: 12px;
+       }
+       
+       .pillar-header {
+         font-size: 0.8rem;
+         margin-bottom: 8px;
+       }
+       
+       .pillar-main {
+         font-size: 1.2rem;
+         margin-bottom: 8px;
+       }
+       
+       .pillar-details {
+         gap: 6px;
+       }
+       
+       .detail-row {
+         gap: 6px;
+       }
+       
+       .detail-label {
+         font-size: 0.7rem;
+       }
+       
+       .detail-value {
+         font-size: 0.8rem;
+       }
+       
+       .dayun-content {
+         grid-template-columns: 1fr;
+         gap: 12px;
+       }
+       
+       .dayun-item {
+         padding: 8px;
+       }
+       
+       .dayun-label {
+         font-size: 0.75rem;
+       }
+       
+       .dayun-value {
+         font-size: 0.8rem;
+       }
+       
+       .action-buttons {
+         flex-direction: column;
+         gap: 10px;
+       }
+       
+       .action-btn {
+         padding: 10px 14px;
+         font-size: 0.85rem;
+       }
+     }
+
+     @media (max-width: 480px) {
+       body {
+         background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+         padding: 0;
+         margin: 0;
+       }
+       
+       body::before {
+         display: block;
+       }
+       
+       .container {
+         background: rgba(26, 26, 46, 0.9);
+         backdrop-filter: blur(20px);
+         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+         border: 1px solid rgba(255, 255, 255, 0.1);
+         padding: 12px;
+         margin: 12px;
+         width: calc(100% - 24px);
+         max-width: none;
+       }
+       
+       .header {
+         margin-bottom: 20px;
+       }
+       
+       .logo {
+         font-size: 2rem;
+       }
+       
+       .title {
+         font-size: 1.3rem;
+       }
+       
+       .subtitle {
+         font-size: 0.8rem;
+       }
+       
+       .form-group {
+         margin-bottom: 15px;
+       }
+       
+       .form-label {
+         font-size: 0.75rem;
+       }
+       
+       .form-input, .form-select {
+         padding: 8px 12px;
+         font-size: 0.8rem;
+       }
+       
+       .gender-group {
+         gap: 8px;
+       }
+       
+       .gender-label {
+         padding: 6px 10px;
+         font-size: 0.8rem;
+       }
+       
+       .submit-btn {
+         padding: 10px 16px;
+         font-size: 0.85rem;
+       }
+       
+       .result-section {
+         padding: 12px;
+         margin-top: 12px;
+       }
+       
+       .result-title {
+         font-size: 1.1rem;
+       }
+       
+       .bazi-info {
+         gap: 12px;
+       }
+       
+       .basic-info {
+         grid-template-columns: 1fr;
+         gap: 10px;
+       }
+       
+       .info-item {
+         padding: 8px;
+       }
+       
+       .info-label {
+         font-size: 0.7rem;
+       }
+       
+       .info-value {
+         font-size: 0.8rem;
+       }
+       
+       .pillars-grid {
+         grid-template-columns: 1fr;
+         gap: 10px;
+       }
+       
+       .pillar-card {
+         padding: 10px;
+       }
+       
+       .pillar-header {
+         font-size: 0.75rem;
+         margin-bottom: 6px;
+       }
+       
+       .pillar-main {
+         font-size: 1.1rem;
+         margin-bottom: 6px;
+       }
+       
+       .pillar-details {
+         gap: 4px;
+       }
+       
+       .detail-row {
+         gap: 4px;
+       }
+       
+       .detail-label {
+         font-size: 0.65rem;
+       }
+       
+       .detail-value {
+         font-size: 0.75rem;
+       }
+       
+       .dayun-content {
+         grid-template-columns: 1fr;
+         gap: 10px;
+       }
+       
+       .dayun-item {
+         padding: 6px;
+       }
+       
+       .dayun-label {
+         font-size: 0.7rem;
+       }
+       
+       .dayun-value {
+         font-size: 0.75rem;
+       }
+       
+       .action-buttons {
+         flex-direction: column;
+         gap: 8px;
+       }
+       
+       .action-btn {
+         padding: 8px 12px;
+         font-size: 0.8rem;
+       }
+     }
+  </style>
+  <script>
+    // These will be filled by the server in the HTML response
+    let countryToTimezones = {};
+    let countryNames = {};
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">☯️</div>
+      <h1 class="title">八字命理</h1>
+      <p class="subtitle">探索你的人生密码，发现内在潜能</p>
+    </div>
+
+  <form id="birthForm" action="/convert" method="post">
+      <div class="form-group">
+        <label class="form-label" for="country">
+          <i class="fas fa-globe"></i>
+          国家 / Country
+        </label>
+        <select name="country" id="country" class="form-select" required>
+          <option value="">请选择国家</option>
+      </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="state">
+          <i class="fas fa-map-marker-alt"></i>
+          省份 / State
+        </label>
+        <select name="state" id="state" class="form-select" required disabled>
+          <option value="">请先选择国家</option>
+      </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="city">
+          <i class="fas fa-city"></i>
+          城市 / City
+        </label>
+        <select name="city" id="city" class="form-select" required disabled>
+          <option value="">请先选择省份</option>
+      </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          <i class="fas fa-venus-mars"></i>
+          性别 / Gender
+        </label>
+        <div class="gender-group">
+          <div class="gender-option">
+            <input type="radio" id="female" class="gender-radio" value="0" name="gender" required>
+            <label for="female" class="gender-label">
+              <i class="fas fa-venus"></i>
+              女性
+            </label>
+          </div>
+          <div class="gender-option">
+            <input type="radio" id="male" class="gender-radio" value="1" name="gender" required>
+            <label for="male" class="gender-label">
+              <i class="fas fa-mars"></i>
+              男性
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="birthdate">
+          <i class="fas fa-calendar-alt"></i>
+          出生日期 / Birth Date
+        </label>
+        <input type="date" id="birthdate" name="birthdate" class="form-input" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="time">
+          <i class="fas fa-clock"></i>
+          出生时间 / Birth Time
+        </label>
+        <input type="time" id="time" name="time" class="form-input" required>
+      </div>
+
+      <button type="submit" class="submit-btn">
+        <i class="fas fa-magic"></i>
+        开始探索命理
+      </button>
+  </form>
+
+    <div id="baziResult" class="result-section">
+      <h3 class="result-title">
+        <i class="fas fa-yin-yang"></i>
+        你的八字信息
+      </h3>
+      <div id="resultContent" class="result-content"></div>
+      <div class="action-buttons">
+        <a href="chat.html" class="action-btn btn-chat" id="chatLink" style="display:none;">
+          <i class="fas fa-comments"></i>
+          AI 命理咨询
+        </a>
+        <button class="action-btn btn-report" id="reportLink" style="display:none;" onclick="generateReport()">
+          <i class="fas fa-file-alt"></i>
+          生成详细报告
+        </button>
+        <button class="action-btn btn-edit" id="editLink" style="display:none;" onclick="showForm()">
+          <i class="fas fa-edit"></i>
+          重新填写信息
+        </button>
+        <button class="action-btn btn-report2" id="report2Link" style="display:none;" onclick="generateReport2()">
+          <i class="fas fa-star"></i>
+          星空版报告
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function generateReport() {
+      const reportBtn = document.getElementById('reportLink');
+      const originalText = reportBtn.innerHTML;
+      
+      try {
+        reportBtn.innerHTML = '<div class="loading"><div class="spinner"></div>生成中...</div>';
+        reportBtn.disabled = true;
+        
+        const response = await fetch('/generate-report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({})
+        });
+        
+        if (!response.ok) {
+          throw new Error('生成报告失败');
+        }
+        
+        window.location.href = 'report.html';
+        
+      } catch (err) {
+        const resultDiv = document.getElementById('resultContent');
+        resultDiv.innerHTML += `<div class="error">生成报告时出错: ${err.message}</div>`;
+        reportBtn.innerHTML = originalText;
+        reportBtn.disabled = false;
+      }
+    }
+
+    async function generateReport2() {
+      const report2Btn = document.getElementById('report2Link');
+      const originalText = report2Btn.innerHTML;
+      
+      try {
+        report2Btn.innerHTML = '<div class="loading"><div class="spinner"></div>生成中...</div>';
+        report2Btn.disabled = true;
+        
+        const response = await fetch('/generate-report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({})
+        });
+        
+        if (!response.ok) {
+          throw new Error('生成报告失败');
+        }
+        
+        window.location.href = 'report2.html';
+        
+      } catch (err) {
+        const resultDiv = document.getElementById('resultContent');
+        resultDiv.innerHTML += `<div class="error">生成报告时出错: ${err.message}</div>`;
+        report2Btn.innerHTML = originalText;
+        report2Btn.disabled = false;
+      }
+    }
+
+    // 获取五行对应的CSS类名
+    function getElementClass(element) {
+      const elementMap = {
+        '木': 'element-wood',
+        '火': 'element-fire', 
+        '土': 'element-earth',
+        '金': 'element-metal',
+        '水': 'element-water'
+      };
+      return elementMap[element] || '';
+    }
+
+    // 从localStorage加载八字数据
+    function loadBaziDataFromStorage() {
+      const savedData = localStorage.getItem('baziData');
+      if (savedData) {
+        try {
+          const data = JSON.parse(savedData);
+          displayBaziData(data);
+          return true;
+        } catch (error) {
+          console.error('加载保存的八字数据失败:', error);
+          localStorage.removeItem('baziData');
+        }
+      }
+      return false;
+    }
+
+    // 保存八字数据到localStorage
+    function saveBaziDataToStorage(data) {
+      try {
+        localStorage.setItem('baziData', JSON.stringify(data));
+      } catch (error) {
+        console.error('保存八字数据失败:', error);
+      }
+    }
+
+    // 隐藏表单
+    function hideForm() {
+      const form = document.getElementById('birthForm');
+      const header = document.querySelector('.header');
+      if (form) form.style.display = 'none';
+      if (header) header.style.display = 'none';
+    }
+
+    // 显示表单
+    function showForm() {
+      const form = document.getElementById('birthForm');
+      const header = document.querySelector('.header');
+      const baziResult = document.getElementById('baziResult');
+      const editLink = document.getElementById('editLink');
+      const report2Link = document.getElementById('report2Link');
+      
+      if (form) form.style.display = 'block';
+      if (header) header.style.display = 'block';
+      if (baziResult) baziResult.classList.remove('show');
+      if (editLink) editLink.style.display = 'none';
+      if (report2Link) report2Link.style.display = 'none';
+      
+      // 清除localStorage数据
+      localStorage.removeItem('baziData');
+      
+      // 滚动到页面顶部
+      window.scrollTo(0, 0);
+    }
+
+    // 显示八字数据
+    function displayBaziData(result) {
+      const baziResultDiv = document.getElementById('baziResult');
+      const resultContent = document.getElementById('resultContent');
+      
+      let html = '';
+      
+      if (result.baziData && Object.keys(result.baziData).length > 0) {
+        const bazi = result.baziData;
+        
+        // 基本信息
+        html += `
+          <div class="basic-info">
+            <div class="info-item">
+              <div class="info-label">时区</div>
+              <div class="info-value">${result.timezone}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">性别</div>
+              <div class="info-value">${result.gender}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">生肖</div>
+              <div class="info-value">${bazi.生肖 || '未知'}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">阳历</div>
+              <div class="info-value">${bazi.阳历 || '未知'}</div>
+            </div>
+          </div>
+        `;
+        
+        // 四柱八字
+        html += `
+          <div class="pillars-section">
+            <div class="pillars-title">
+              <i class="fas fa-yin-yang"></i>
+              四柱八字
+            </div>
+            <div class="pillars-grid">
+        `;
+        
+        const pillars = [
+          { name: '年柱', data: bazi.年柱, chars: bazi.八字?.split(' ')[0] || '' },
+          { name: '月柱', data: bazi.月柱, chars: bazi.八字?.split(' ')[1] || '' },
+          { name: '日柱', data: bazi.日柱, chars: bazi.八字?.split(' ')[2] || '' },
+          { name: '时柱', data: bazi.时柱, chars: bazi.八字?.split(' ')[3] || '' }
+        ];
+        
+        pillars.forEach(pillar => {
+          if (pillar.data) {
+            const tianganElement = getElementClass(pillar.data.天干?.五行);
+            const dizhiElement = getElementClass(pillar.data.地支?.五行);
+            const tenshen = pillar.data.天干?.十神;
+            
+            html += `
+              <div class="pillar-card">
+                <div class="pillar-header">${pillar.name}</div>
+                <div class="pillar-main">${pillar.chars}</div>
+                <div class="pillar-details">
+                  <div class="detail-row">
+                    <span class="detail-label">天干:</span>
+                    <span class="detail-value ${tianganElement}">${pillar.data.天干?.天干 || ''}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">五行:</span>
+                    <span class="detail-value ${tianganElement}">${pillar.data.天干?.五行 || ''}</span>
+                  </div>
+                  ${tenshen ? `
+                  <div class="detail-row">
+                    <span class="detail-label">十神:</span>
+                    <span class="detail-value tenshen">${tenshen}</span>
+                  </div>
+                  ` : ''}
+                  <div class="detail-row">
+                    <span class="detail-label">地支:</span>
+                    <span class="detail-value ${dizhiElement}">${pillar.data.地支?.地支 || ''}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">五行:</span>
+                    <span class="detail-value ${dizhiElement}">${pillar.data.地支?.五行 || ''}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+        });
+        
+        html += `
+            </div>
+          </div>
+        `;
+        
+        // 当前大运
+        if (bazi.大运?.大运?.length > 0) {
+          const currentYear = new Date().getFullYear();
+          let currentDayun = null;
+          
+          for (let dayun of bazi.大运.大运) {
+            if (dayun.开始年份 <= currentYear && dayun.结束年份 >= currentYear) {
+              currentDayun = dayun;
+              break;
+            }
+          }
+          
+          if (currentDayun) {
+            html += `
+              <div class="dayun-section">
+                <div class="dayun-title">
+                  ⭐ 当前大运 (${currentDayun.开始年份}-${currentDayun.结束年份})
+                </div>
+                <div class="dayun-content">
+                  <div class="dayun-item">
+                    <div class="dayun-label">天干十神</div>
+                    <div class="dayun-value">${currentDayun.天干十神 || '未知'}</div>
+                  </div>
+                  <div class="dayun-item">
+                    <div class="dayun-label">地支十神</div>
+                    <div class="dayun-value">${Array.isArray(currentDayun.地支十神) ? currentDayun.地支十神.join(', ') : (currentDayun.地支十神 || '未知')}</div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+        }
+        
+      } else {
+        html += '<div class="error">未能获取八字数据</div>';
+      }
+      
+      resultContent.innerHTML = html;
+      baziResultDiv.classList.add('show');
+      document.getElementById('chatLink').style.display = '';
+      document.getElementById('reportLink').style.display = '';
+      document.getElementById('editLink').style.display = '';
+      document.getElementById('report2Link').style.display = '';
+    }
+
+    // Handle form submission
+    document.addEventListener('DOMContentLoaded', function() {
+          // 页面加载时尝试从localStorage恢复八字数据
+    const hasData = loadBaziDataFromStorage();
+    if (hasData) {
+      // 如果有保存的数据，隐藏表单并显示所有按钮
+      hideForm();
+      document.getElementById('chatLink').style.display = '';
+      document.getElementById('reportLink').style.display = '';
+      document.getElementById('editLink').style.display = '';
+      document.getElementById('report2Link').style.display = '';
+    }
+      
+      document.getElementById('birthForm').onsubmit = async function(e) {
+        e.preventDefault();
+        
+        // 清除旧的localStorage数据
+        localStorage.removeItem('baziData');
+        
+        const form = e.target;
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        
+        const submitBtn = document.querySelector('.submit-btn');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<div class="loading"><div class="spinner"></div>计算中...</div>';
+        submitBtn.disabled = true;
+        
+        try {
+        const resp = await fetch('/convert', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+          
+        const baziResultDiv = document.getElementById('baziResult');
+          const resultContent = document.getElementById('resultContent');
+          
+        if (resp.ok) {
+          const result = await resp.json();
+          
+          // 保存八字数据到localStorage
+          saveBaziDataToStorage(result);
+          
+          // 显示八字数据
+          displayBaziData(result);
+          
+          // 隐藏表单
+          hideForm();
+
+        } else {
+          const err = await resp.text();
+            resultContent.innerHTML = `<div class="error">错误: ${err}</div>`;
+            baziResultDiv.classList.add('show');
+          }
+        } catch (error) {
+          const resultContent = document.getElementById('resultContent');
+          resultContent.innerHTML = `<div class="error">请求失败: ${error.message}</div>`;
+          document.getElementById('baziResult').classList.add('show');
+        } finally {
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+        }
+      };
+    });
+  </script>
+
+  <script>
+    // This script will be replaced by the server to inject country/timezone data and populate the dropdowns
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const countrySelect = document.getElementById('country');
+      const stateSelect = document.getElementById('state');
+      const citySelect = document.getElementById('city');
+
+      // Handle country selection
+      countrySelect.addEventListener('change', function() {
+        const countryCode = this.value;
+        stateSelect.innerHTML = '<option value="">请先选择国家</option>';
+        citySelect.innerHTML = '<option value="">请先选择省份</option>';
+        stateSelect.disabled = true;
+        citySelect.disabled = true;
+        
+        if (countryCode) {
+          fetch(`/states/${countryCode}`)
+            .then(res => res.json())
+            .then(states => {
+              stateSelect.innerHTML = '<option value="">请选择省份</option>';
+              states.forEach(state => {
+                const opt = document.createElement('option');
+                opt.value = state.isoCode;
+                opt.textContent = state.name;
+                stateSelect.appendChild(opt);
+              });
+              stateSelect.disabled = false;
+            })
+            .catch(error => {
+              console.error('获取省份数据失败:', error);
+            });
+        }
+      });
+
+      // Handle state selection
+      stateSelect.addEventListener('change', function() {
+        const countryCode = countrySelect.value;
+        const stateCode = this.value;
+        citySelect.innerHTML = '<option value="">请先选择省份</option>';
+        citySelect.disabled = true;
+        
+        if (countryCode && stateCode) {
+          fetch(`/cities/${countryCode}/${stateCode}`)
+            .then(res => res.json())
+            .then(cities => {
+                if (cities.length > 0) {
+                citySelect.innerHTML = '<option value="">请选择城市</option>';
+                  cities.forEach(city => {
+                    const opt = document.createElement('option');
+                    opt.value = city.name;
+                    opt.textContent = city.name;
+                    citySelect.appendChild(opt);
+                  });
+                  citySelect.disabled = false;
+                  citySelect.required = true;
+                } else {
+                citySelect.innerHTML = '<option value="无城市数据">该省份暂无城市数据</option>';
+                  citySelect.disabled = false;
+                citySelect.required = false;
+                }
+            })
+            .catch(error => {
+              console.error('获取城市数据失败:', error);
+              citySelect.innerHTML = '<option value="加载失败">城市数据加载失败</option>';
+              citySelect.disabled = false;
+              citySelect.required = false;
+            });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+</html>

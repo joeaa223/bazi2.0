@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个性化八字报告 · 发现真实的自己</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* 背景装饰 */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      padding: 24px 0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .title-group h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #2d3748;
+      background: linear-gradient(135deg, #2d3748, #4a5568);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+    }
+
+    .title-group p {
+      color: #718096;
+      font-size: 0.9rem;
+    }
+
+    .backbtn-container {
+      display: flex;
+      margin-right: 20px;
+    }
+
+    .back-btn {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: 120px;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .report-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .report-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #718096;
+    }
+
+    .loading-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .loading-text {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    .loading-subtext {
+      font-size: 0.9rem;
+      margin-top: 8px;
+      opacity: 0.7;
+    }
+
+    .error {
+      text-align: center;
+      padding: 60px 20px;
+      color: #e53e3e;
+      background: linear-gradient(135deg, #fed7d7, #feb2b2);
+      border-radius: 16px;
+      margin: 20px 0;
+    }
+
+    .error-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .section-icon {
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2d3748;
+    }
+
+    .chart-section {
+      background: linear-gradient(135deg, #f7fafc, #edf2f7);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 32px;
+    }
+
+    .radar-chart-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+      height: 400px;
+    }
+
+    .radar-chart {
+      max-width: 700px;
+      max-height: 400px;
+      width: 100%;
+      height: 100%;
+    }
+
+
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .content-card {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+
+    .content-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title i {
+      color: #667eea;
+    }
+
+    .summary-text {
+      color: #4a5568;
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    .list-container {
+      margin-top: 16px;
+    }
+
+    .custom-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .custom-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid #f1f5f9;
+      color: #4a5568;
+      line-height: 1.6;
+      position: relative;
+      padding-left: 24px;
+    }
+
+    .custom-list li:last-child {
+      border-bottom: none;
+    }
+
+    .custom-list li::before {
+      content: '✨';
+      position: absolute;
+      left: 0;
+      top: 12px;
+      font-size: 0.9rem;
+    }
+
+    .career-list li::before {
+      content: '·';
+    }
+
+    .advice-list li::before {
+      content: '💡';
+    }
+
+    .question-list li::before {
+      content: '🤔';
+    }
+
+    .challenge-list li::before {
+      content: '🎯';
+    }
+
+    .full-width-card {
+      grid-column: 1 / -1;
+    }
+
+    .communication-style {
+      background: linear-gradient(135deg, #e6fffa, #b2f5ea);
+      border: 1px solid #81e6d9;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+
+    .communication-text {
+      color: #234e52;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+         /* 响应式设计 */
+     @media (max-width: 768px) {
+       .header-content {
+         flex-direction: column;
+         gap: 16px;
+         text-align: center;
+       }
+       
+       .container {
+         padding: 20px 10px;
+       }
+       
+       .report-container {
+         padding: 24px 20px;
+       }
+       
+
+       
+       .content-grid {
+         grid-template-columns: 1fr;
+       }
+       
+       .section-header {
+         flex-direction: column;
+         text-align: center;
+         gap: 8px;
+       }
+
+       .radar-chart-container {
+         height: 300px;
+       }
+
+       .radar-chart {
+         max-width: 300px;
+         max-height: 300px;
+       }
+     }
+
+    /* 动画效果 */
+    .fade-in {
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="logo-section">
+
+      
+    </div>
+  </div>
+
+  <div class="container">
+  <div id="reportContainer" class="report-container">
+      <div class="loading">
+        <div class="loading-icon">🌟</div>
+        <div class="loading-text">正在生成你的专属报告</div>
+        <div class="loading-subtext">AI正在深度分析你的八字信息，请稍候...</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="backbtn-container">
+    <a href="/" class="back-btn">
+      返回首页
+    </a>
+  </div>
+  
+  <script>
+    window.addEventListener('DOMContentLoaded', async function() {
+      const reportContainer = document.getElementById('reportContainer');
+      
+      try {
+        const response = await fetch('/get-report');
+        
+        if (!response.ok) {
+          throw new Error('未找到报告，请先生成报告。');
+        }
+        
+        const data = await response.json();
+        let report = data.report;
+        
+        // Try to parse if it's a JSON string
+        if (typeof report === 'string') {
+          try {
+            report = JSON.parse(report);
+          } catch (e) {
+            // Not JSON, use as-is
+          }
+        }
+        
+        // Format the report based on content type
+        if (typeof report === 'string') {
+          // Plain text report
+          reportContainer.innerHTML = `
+            <div class="fade-in">
+              <div class="section">
+                <div class="content-card full-width-card">
+                  <div class="summary-text">${report.replace(/\n/g, '<br>')}</div>
+                </div>
+              </div>
+            </div>
+          `;
+        } else {
+          // JSON structured report
+          let html = '<div class="fade-in">';
+          
+          if (report.polygonChart) {
+            html += `
+              <div class="section">
+                <div class="section-header">
+                  <i class="fas fa-chart-radar section-icon"></i>
+                  <h2 class="section-title">人格维度分析</h2>
+                </div>
+                <div class="chart-section">
+                  <div class="radar-chart-container">
+                    <canvas id="radarChart" class="radar-chart"></canvas>
+                  </div>
+                </div>
+              </div>
+            `;
+            
+            // 维度名称映射
+            const dimensionNames = {
+              'leadershipAndIndependence': '领导力与独立性',
+              'empathyAndConnection': '同理心与人际连接',
+              'creativityAndExpression': '创造力与表达',
+              'analyticalAndStrategicMind': '分析与战略思维',
+              'diligenceAndReliability': '勤勉与可靠性',
+              'adventurousAndAdaptableSpirit': '冒险精神与适应力'
+            };
+            
+            // 存储雷达图数据，稍后用于生成图表
+            window.radarChartData = {
+              labels: Object.keys(report.polygonChart).map(key => dimensionNames[key] || key),
+              values: Object.values(report.polygonChart)
+            };
+          }
+          
+          if (report.personalityProfile) {
+            html += `
+              <div class="section">
+                <div class="section-header">
+                  <i class="fas fa-user-circle section-icon"></i>
+                  <h2 class="section-title">性格概况</h2>
+                </div>
+                <div class="content-grid">
+                  <div class="content-card full-width-card">
+                    <div class="card-title">
+                      <i class="fas fa-lightbulb"></i>
+                      综合概述
+                    </div>
+                    <div class="summary-text">${report.personalityProfile.summary}</div>
+                  </div>
+                  
+                  <div class="content-card">
+                    <div class="card-title">
+                      <i class="fas fa-star"></i>
+                      核心优势
+                    </div>
+                    <ul class="custom-list">
+            `;
+            
+            report.personalityProfile.strengths.forEach(strength => {
+              html += `<li>${strength}</li>`;
+            });
+            
+            html += `
+                    </ul>
+                  </div>
+                  
+                  <div class="content-card">
+                    <div class="card-title">
+                      <i class="fas fa-target"></i>
+                      成长挑战
+                    </div>
+                    <ul class="custom-list challenge-list">
+            `;
+            
+            report.personalityProfile.challenges.forEach(challenge => {
+              html += `<li>${challenge}</li>`;
+            });
+            
+            html += `
+                    </ul>
+                  </div>
+                  
+                  <div class="content-card full-width-card">
+                    <div class="card-title">
+                      <i class="fas fa-comments"></i>
+                      沟通风格
+                    </div>
+                    <div class="communication-style">
+                      <div class="communication-text">${report.personalityProfile.communicationStyle}</div>
+                    </div>
+                  </div>
+                  
+                  <div class="content-card full-width-card">
+                    <div class="card-title">
+                      <i class="fas fa-briefcase"></i>
+                      职业发展建议
+                    </div>
+                    <ul class="custom-list career-list">
+            `;
+            
+            report.personalityProfile.careerSuggestions.forEach(career => {
+              html += `<li>${career}</li>`;
+            });
+            
+            html += `
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+          
+          if (report.practicalAdvice) {
+            html += `
+              <div class="section">
+                <div class="section-header">
+                  <i class="fas fa-compass section-icon"></i>
+                  <h2 class="section-title">实用生活建议</h2>
+                </div>
+                <div class="content-card">
+                  <div class="card-title">
+                    <i class="fas fa-lightbulb"></i>
+                    日常实践指南
+                  </div>
+                  <ul class="custom-list advice-list">
+            `;
+            
+            report.practicalAdvice.forEach(advice => {
+              html += `<li>${advice}</li>`;
+            });
+            
+            html += `
+                  </ul>
+                </div>
+              </div>
+            `;
+          }
+          
+          if (report.reflectiveQuestions) {
+            html += `
+              <div class="section">
+                <div class="section-header">
+                  <i class="fas fa-question-circle section-icon"></i>
+                  <h2 class="section-title">深度反思</h2>
+                </div>
+                <div class="content-card">
+                  <div class="card-title">
+                    <i class="fas fa-brain"></i>
+                    自我探索问题
+                  </div>
+                  <ul class="custom-list question-list">
+            `;
+            
+            report.reflectiveQuestions.forEach(question => {
+              html += `<li>${question}</li>`;
+            });
+            
+            html += `
+                  </ul>
+                </div>
+              </div>
+            `;
+          }
+          
+          html += '</div>';
+          reportContainer.innerHTML = html;
+        }
+        
+      } catch (error) {
+        reportContainer.innerHTML = `
+          <div class="error">
+            <div class="error-icon">⚠️</div>
+            <div>错误: ${error.message}</div>
+          </div>
+        `;
+      }
+      
+      // 生成雷达图
+      if (window.radarChartData) {
+        setTimeout(() => {
+          createRadarChart();
+        }, 100);
+      }
+    });
+
+    function createRadarChart() {
+      const ctx = document.getElementById('radarChart');
+      if (!ctx || !window.radarChartData) return;
+
+      // 自定义插件：在顶点显示数字
+      const vertexLabelPlugin = {
+        id: 'vertexLabels',
+        afterDraw: function(chart) {
+          const ctx = chart.ctx;
+          const meta = chart.getDatasetMeta(0);
+          
+          if (!meta.data) return;
+          
+          ctx.save();
+          ctx.font = 'bold 13px Inter, Microsoft YaHei, sans-serif';
+          ctx.fillStyle = '#667eea';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          
+          meta.data.forEach((point, index) => {
+            const value = window.radarChartData.values[index];
+            const x = point.x;
+            const y = point.y;
+            
+            // 计算标签位置，避免与轴标签重叠
+            const angle = (index * 2 * Math.PI) / meta.data.length - Math.PI / 2;
+            const offsetX = Math.cos(angle) * 35;
+            const offsetY = Math.sin(angle) * 35;
+            
+            // 添加背景色以提高可读性
+            const text = value.toString();
+            const textWidth = ctx.measureText(text).width;
+            const padding = 4;
+            
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.fillRect(
+              x + offsetX - textWidth/2 - padding, 
+              y + offsetY - 10 - padding, 
+              textWidth + padding * 2, 
+              20 + padding * 2
+            );
+            
+            // 绘制边框
+            ctx.strokeStyle = 'rgba(102, 126, 234, 0.3)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(
+              x + offsetX - textWidth/2 - padding, 
+              y + offsetY - 10 - padding, 
+              textWidth + padding * 2, 
+              20 + padding * 2
+            );
+            
+            // 绘制文字
+            ctx.fillStyle = '#667eea';
+            ctx.fillText(text, x + offsetX, y + offsetY);
+          });
+          
+          ctx.restore();
+        }
+      };
+
+      new Chart(ctx, {
+        type: 'radar',
+        plugins: [vertexLabelPlugin],
+        data: {
+          labels: window.radarChartData.labels,
+          datasets: [{
+            label: '人格维度评分',
+            data: window.radarChartData.values,
+            backgroundColor: 'rgba(102, 126, 234, 0.2)',
+            borderColor: 'rgba(102, 126, 234, 1)',
+            borderWidth: 3,
+            pointBackgroundColor: 'rgba(102, 126, 234, 1)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            pointHoverBackgroundColor: 'rgba(118, 75, 162, 1)',
+            pointHoverBorderColor: '#fff',
+            pointHoverBorderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              borderColor: 'rgba(102, 126, 234, 1)',
+              borderWidth: 1,
+              cornerRadius: 8,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return context.parsed.r + '/10';
+                }
+              }
+            },
+            customCanvasBackgroundColor: {
+              color: 'transparent',
+            }
+          },
+          scales: {
+            r: {
+              beginAtZero: true,
+              min: 0,
+              max: 12,
+              ticks: {
+                stepSize: 2,
+                color: '#718096',
+                font: {
+                  size: 12,
+                  family: 'Inter, Microsoft YaHei, sans-serif'
+                },
+                backdropColor: 'transparent'
+              },
+              grid: {
+                color: 'rgba(113, 128, 150, 0.3)',
+                lineWidth: 1
+              },
+              angleLines: {
+                color: 'rgba(113, 128, 150, 0.3)',
+                lineWidth: 1
+              },
+              pointLabels: {
+                color: '#2d3748',
+                font: {
+                  size: 13,
+                  weight: '600',
+                  family: 'Inter, Microsoft YaHei, sans-serif'
+                },
+                padding: 20
+              }
+            }
+          },
+          elements: {
+            line: {
+              tension: 0.1
+            }
+          },
+          interaction: {
+            intersect: false
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
