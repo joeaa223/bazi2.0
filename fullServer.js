@@ -46,6 +46,10 @@ try {
   const PORT = process.env.PORT || 3010;
   const server = app.listen(PORT, () => {
     console.log(`Full Server running at http://localhost:${PORT}`);
+    console.log('Environment variables:', {
+      GEMINI_API_KEY: process.env.GEMINI_API_KEY ? 'Set' : 'Not set',
+      NODE_ENV: process.env.NODE_ENV || 'development'
+    });
   });
 
   // Handle graceful shutdown

@@ -2,10 +2,10 @@
   "name": "bazi-latest",
   "version": "1.0.0",
   "description": "Bazi web server for birth info input and ISO time conversion.",
-  "main": "server.js",
+  "main": "fullServer.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": "node fullServer.js"
   },
   "dependencies": {
     "@google/genai": "^1.11.0",

@@ -34,41 +34,51 @@ export function setupLocationRoutes(app) {
   });
   app.locals.countryToTimezones = countryToTimezones;
 
+  // Test route to ensure server is running
+  app.get("/test", (req, res) => {
+    res.json({ message: "Server is running!", timestamp: new Date().toISOString() });
+  });
+
   // Serve the HTML form with all countries
   app.get("/", (req, res) => {
-    const formPath = path.join(__dirname, 'form2.html');
-    let formHtml = fs.readFileSync(formPath, 'utf8');
-    
-    // Inject country/timezone data
-    const injectScript = `
-      countryToTimezones = ${JSON.stringify(countryToTimezones)};
-      countryNames = ${JSON.stringify(countryNames)};
-      document.addEventListener('DOMContentLoaded', function() {
-        // Populate country dropdown with priority countries on top
-        const countrySelect = document.getElementById('country');
-        countrySelect.innerHTML = '<option value="">请选择国家</option>';
-        const priority = ['MY', 'SG', 'CN', 'TW', 'TH'];
-        priority.forEach(code => {
-          if (countryNames[code]) {
-            const opt = document.createElement('option');
-            opt.value = code;
-            opt.textContent = countryNames[code];
-            countrySelect.appendChild(opt);
-          }
+    try {
+      const formPath = path.join(__dirname, 'form2.html');
+      let formHtml = fs.readFileSync(formPath, 'utf8');
+      
+      // Inject country/timezone data
+      const injectScript = `
+        countryToTimezones = ${JSON.stringify(countryToTimezones)};
+        countryNames = ${JSON.stringify(countryNames)};
+        document.addEventListener('DOMContentLoaded', function() {
+          // Populate country dropdown with priority countries on top
+          const countrySelect = document.getElementById('country');
+          countrySelect.innerHTML = '<option value="">请选择国家</option>';
+          const priority = ['MY', 'SG', 'CN', 'TW', 'TH'];
+          priority.forEach(code => {
+            if (countryNames[code]) {
+              const opt = document.createElement('option');
+              opt.value = code;
+              opt.textContent = countryNames[code];
+              countrySelect.appendChild(opt);
+            }
+          });
+          // Add the rest
+          Object.entries(countryNames).forEach(([code, name]) => {
+            if (!priority.includes(code)) {
+              const opt = document.createElement('option');
+              opt.value = code;
+              opt.textContent = name;
+              countrySelect.appendChild(opt);
+            }
+          });
         });
-        // Add the rest
-        Object.entries(countryNames).forEach(([code, name]) => {
-          if (!priority.includes(code)) {
-            const opt = document.createElement('option');
-            opt.value = code;
-            opt.textContent = name;
-            countrySelect.appendChild(opt);
-          }
-        });
-      });
-    `;
-    formHtml = formHtml.replace('// This script will be replaced by the server to inject country/timezone data and populate the dropdowns', injectScript);
-    res.send(formHtml);
+      `;
+      formHtml = formHtml.replace('// This script will be replaced by the server to inject country/timezone data and populate the dropdowns', injectScript);
+      res.send(formHtml);
+    } catch (error) {
+      console.error('Error serving form:', error);
+      res.status(500).json({ error: 'Failed to load form', details: error.message });
+    }
   });
 
   // Serve form.html with all countries
