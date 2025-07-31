@@ -8,6 +8,30 @@
   ],
   "routes": [
     {
+      "src": "/report2.html",
+      "dest": "/fullServer.js"
+    },
+    {
+      "src": "/report.html",
+      "dest": "/fullServer.js"
+    },
+    {
+      "src": "/chat.html",
+      "dest": "/fullServer.js"
+    },
+    {
+      "src": "/form.html",
+      "dest": "/fullServer.js"
+    },
+    {
+      "src": "/form2.html",
+      "dest": "/fullServer.js"
+    },
+    {
+      "src": "/img/(.*)",
+      "dest": "/fullServer.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/fullServer.js"
     }

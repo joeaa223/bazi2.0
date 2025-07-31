@@ -18,6 +18,17 @@ export function configureBasicServer() {
   app.use(express.static(__dirname));
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
+  
+  // Serve static files with explicit routes for Vercel
+  app.get("/img/:filename", (req, res) => {
+    try {
+      const filePath = path.join(__dirname, 'img', req.params.filename);
+      res.sendFile(filePath);
+    } catch (error) {
+      console.error('Error serving image:', error);
+      res.status(404).json({ error: 'Image not found' });
+    }
+  });
 
   return { app, __dirname };
 }
@@ -37,6 +48,23 @@ export function setupLocationRoutes(app) {
   // Test route to ensure server is running
   app.get("/test", (req, res) => {
     res.json({ message: "Server is running!", timestamp: new Date().toISOString() });
+  });
+
+  // Debug route to check file existence
+  app.get("/debug/files", (req, res) => {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const files = fs.readdirSync(__dirname);
+      const htmlFiles = files.filter(file => file.endsWith('.html'));
+      res.json({ 
+        message: "Available HTML files",
+        files: htmlFiles,
+        currentDir: __dirname
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   });
 
   // Serve the HTML form with all countries
@@ -116,6 +144,47 @@ export function setupLocationRoutes(app) {
     `;
     formHtml = formHtml.replace('// This script will be replaced by the server to inject country/timezone data and populate the dropdowns', injectScript);
     res.send(formHtml);
+  });
+
+  // Serve other HTML files directly
+  app.get("/chat.html", (req, res) => {
+    try {
+      const filePath = path.join(__dirname, 'chat.html');
+      res.sendFile(filePath);
+    } catch (error) {
+      console.error('Error serving chat.html:', error);
+      res.status(404).json({ error: 'chat.html not found' });
+    }
+  });
+
+  app.get("/report.html", (req, res) => {
+    try {
+      const filePath = path.join(__dirname, 'report.html');
+      res.sendFile(filePath);
+    } catch (error) {
+      console.error('Error serving report.html:', error);
+      res.status(404).json({ error: 'report.html not found' });
+    }
+  });
+
+  app.get("/report2.html", (req, res) => {
+    try {
+      const filePath = path.join(__dirname, 'report2.html');
+      res.sendFile(filePath);
+    } catch (error) {
+      console.error('Error serving report2.html:', error);
+      res.status(404).json({ error: 'report2.html not found' });
+    }
+  });
+
+  app.get("/form2.html", (req, res) => {
+    try {
+      const filePath = path.join(__dirname, 'form2.html');
+      res.sendFile(filePath);
+    } catch (error) {
+      console.error('Error serving form2.html:', error);
+      res.status(404).json({ error: 'form2.html not found' });
+    }
   });
 
   // Endpoint to get states for a country
