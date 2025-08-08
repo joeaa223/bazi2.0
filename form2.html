@@ -998,6 +998,12 @@
 
 
     async function generateReport2() {
+      // 检查是否已经生成了八字数据
+      if (!localStorage.getItem('baziData') && (!document.getElementById('baziResult') || !document.getElementById('baziResult').classList.contains('show'))) {
+        alert('❌ 请先填写生日信息\n\n📝 您需要先填写完整的生日信息（年月日时间、性别、出生地点），然后点击"开始探索命理"按钮生成八字数据，之后才能生成报告。\n\n👆 请先完成上方的表单填写');
+        return;
+      }
+      
       const report2Btn = document.getElementById('report2Link');
       const originalText = report2Btn.innerHTML;
       
@@ -1012,7 +1018,13 @@
         });
         
         if (!response.ok) {
-          throw new Error('生成报告失败');
+          const errorData = await response.json();
+          if (response.status === 400) {
+            // 显示友好的错误提示
+            alert(`❌ ${errorData.error}\n\n📝 ${errorData.message}\n\n👆 ${errorData.action}`);
+            return;
+          }
+          throw new Error(errorData.error || '生成报告失败');
         }
         
         window.location.href = 'report2.html';

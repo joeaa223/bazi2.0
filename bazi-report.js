@@ -22,7 +22,11 @@ router.post('/generate-report', async (req, res) => {
     } else if (req.session && req.session.baziData) {
       baziData = req.session.baziData;
     } else {
-      return res.status(400).json({ error: "No BaZi data found. Please submit birth info first." });
+      return res.status(400).json({ 
+        error: "请先填写生日信息", 
+        message: "您需要先在表单页面填写完整的生日信息（年月日时间、性别、出生地点），然后点击'开始探索命理'按钮生成八字数据，之后才能生成报告。",
+        action: "请返回表单页面填写生日信息"
+      });
     }
     
     const { formattedString } = await formatBaziData(baziData, req);
@@ -57,6 +61,22 @@ router.post('/generate-report', async (req, res) => {
                         required: ["leadershipAndIndependence", "empathyAndConnection", "creativityAndExpression", "analyticalAndStrategicMind", "diligenceAndReliability", "adventurousAndAdaptableSpirit"],
                         propertyOrdering: ["leadershipAndIndependence", "empathyAndConnection", "creativityAndExpression", "analyticalAndStrategicMind", "diligenceAndReliability", "adventurousAndAdaptableSpirit"]
 
+                    },
+                    tenGodsScores:{
+                        type: Type.OBJECT,
+                        description: "Scores for each of the Ten Gods based on the Day Pillar, Year Pillar, Month Pillar, Hour Pillar, and Current Da Yun. Each score must be between 1 and 10.",
+                        properties: {
+                            比肩: { type: Type.NUMBER, description: "Score for 比肩 (1-10)" },
+                            劫财: { type: Type.NUMBER, description: "Score for 劫财 (1-10)" },
+                            食神: { type: Type.NUMBER, description: "Score for 食神 (1-10)" },
+                            伤官: { type: Type.NUMBER, description: "Score for 伤官 (1-10)" },
+                            偏财: { type: Type.NUMBER, description: "Score for 偏财 (1-10)" },
+                            正财: { type: Type.NUMBER, description: "Score for 正财 (1-10)" },
+                            七杀: { type: Type.NUMBER, description: "Score for 七杀 (1-10)" },
+                            正官: { type: Type.NUMBER, description: "Score for 正官 (1-10)" },
+                            偏印: { type: Type.NUMBER, description: "Score for 偏印 (1-10)" },
+                            正印: { type: Type.NUMBER, description: "Score for 正印 (1-10)" }
+                        },
                     },
                     personalityProfile: {
                         type: Type.OBJECT,
@@ -164,7 +184,12 @@ router.post('/generate-report', async (req, res) => {
         Current Da Yun (大运): 10%
         Current phase of life, subtly shaping personality development or shifts. Include a subtle influence representing the individual's current life phase and personal growth direction.
 
-        4. #CONTENT GENERATION#
+        5. #TEN GODS ANALYSIS#
+        Give a score from 1 to 10 for each of the following Ten Gods based on the Day Pillar, Year Pillar, Month Pillar, Hour Pillar, and Current Da Yun. The scores must reflect the weighted influence of each pillar
+        
+        比肩、劫财、食神、伤官、偏财、正财、七杀、正官、偏印、正印
+
+        6. #CONTENT GENERATION#
         - Storytelling & Real-Life Examples:
         Integrate short anecdotes, relatable scenarios, or metaphors to illustrate personality traits clearly.
         Make insights vivid and personally meaningful.
@@ -182,10 +207,10 @@ router.post('/generate-report', async (req, res) => {
         -Gender Context:
         * Use the provided gender to select appropriate pronouns (e.g., 他/她). Avoid gender stereotypes; use gender context only to enhance relatability and practical relevance.
 
-        5. #COHERENCE & INTEGRATION#
+        7. #COHERENCE & INTEGRATION#
         The entire report must be internally consistent.
 
-        6. #REFLECTIVE QUESTIONS#
+        8. #REFLECTIVE QUESTIONS#
         Generate carefully crafted questions designed to prompt meaningful reflection.
         Examples:
         - “How have your natural leadership skills helped you overcome past challenges?”
@@ -217,23 +242,14 @@ router.post('/generate-report', async (req, res) => {
         throw new Error("Report text is empty");
     }
     else {
-      // Parse the JSON text to get structured data
-      let structuredReport;
-      try {
-        structuredReport = JSON.parse(report.text);
-      } catch (e) {
-        // If parsing fails, use the text as-is
-        structuredReport = report.text;
-      }
-      
       // Store report in session for later retrieval
       if (req.session) {
-        req.session.baziReport = structuredReport;
+        req.session.baziReport = report.text;
       }
       
       // Send back the response
       res.status(200).json({
-        report: structuredReport
+        report: report.text
       });
     }
 

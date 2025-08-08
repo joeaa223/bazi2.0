@@ -198,7 +198,22 @@
     }
 
     .radar-chart {
-      max-width: 400px;
+      max-width: 800px;
+      max-height: 400px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .tengods-chart-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+      height: 400px;
+    }
+
+    .tengods-chart {
+      max-width: 800px;
       max-height: 400px;
       width: 100%;
       height: 100%;
@@ -341,8 +356,8 @@
       }
 
       .radar-chart {
-        max-width: 300px;
-        max-height: 300px;
+        max-width: 350px;
+        max-height: 350px;
       }
     }
   </style>
@@ -452,6 +467,29 @@
             return dimensionNames[key] || key;
           }),
           values: Object.values(report.polygonChart)
+        };
+      }
+
+      // 添加十神评分显示
+      if (report.tenGodsScores) {
+        html += `
+          <div class="section">
+            <div class="section-header">
+              <i class="fas fa-yin-yang section-icon"></i>
+              <h2 class="section-title">十神评分分析</h2>
+            </div>
+            <div class="chart-section">
+              <div class="tengods-chart-container">
+                <canvas id="tenGodsChart" class="tengods-chart"></canvas>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // 存储十神图表数据
+        window.tenGodsChartData = {
+          labels: Object.keys(report.tenGodsScores),
+          values: Object.values(report.tenGodsScores)
         };
       }
 
@@ -585,6 +623,13 @@
           createRadarChart();
         }, 100);
       }
+      
+      // 生成十神图表
+      if (window.tenGodsChartData) {
+        setTimeout(() => {
+          createTenGodsChart();
+        }, 200);
+      }
     }
 
     // 生成雷达图
@@ -667,6 +712,156 @@
             pointRadius: 6,
             pointHoverRadius: 8,
             pointHoverBackgroundColor: 'rgba(255, 207, 104, 1)',
+            pointHoverBorderColor: '#fff',
+            pointHoverBorderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              titleColor: '#000000',
+              bodyColor: '#000000',
+              borderColor: 'rgba(255, 207, 104, 1)',
+              borderWidth: 1,
+              cornerRadius: 8,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return context.parsed.r + '/10';
+                }
+              }
+            }
+          },
+          scales: {
+            r: {
+              beginAtZero: true,
+              min: 0,
+              max: 10,
+              ticks: {
+                stepSize: 2,
+                color: '#666666',
+                font: {
+                  size: 12,
+                  family: 'Noto Sans SC, Microsoft YaHei, sans-serif'
+                },
+                backdropColor: 'transparent'
+              },
+              grid: {
+                color: 'rgba(102, 102, 102, 0.3)',
+                lineWidth: 1
+              },
+              angleLines: {
+                color: 'rgba(102, 102, 102, 0.3)',
+                lineWidth: 1
+              },
+              pointLabels: {
+                color: '#000000',
+                font: {
+                  size: 13,
+                  weight: '600',
+                  family: 'Noto Sans SC, Microsoft YaHei, sans-serif'
+                },
+                padding: 20
+              }
+            }
+          },
+          elements: {
+            line: {
+              tension: 0.1
+            }
+          },
+          interaction: {
+            intersect: false
+          }
+        }
+      });
+    }
+
+    function createTenGodsChart() {
+      const ctx = document.getElementById('tenGodsChart');
+      if (!ctx || !window.tenGodsChartData) return;
+
+      // 自定义插件：在顶点显示数字
+      const vertexLabelPlugin = {
+        id: 'tenGodsVertexLabels',
+        afterDraw: function(chart) {
+          const ctx = chart.ctx;
+          const meta = chart.getDatasetMeta(0);
+          
+          if (!meta.data) return;
+          
+          ctx.save();
+          ctx.font = 'bold 14px Noto Sans SC, Microsoft YaHei, sans-serif';
+          ctx.fillStyle = '#FFCF68';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          
+          meta.data.forEach((point, index) => {
+            const value = window.tenGodsChartData.values[index];
+            const x = point.x;
+            const y = point.y;
+            
+            // 计算标签位置，避免与轴标签重叠
+            const angle = (index * 2 * Math.PI) / meta.data.length - Math.PI / 2;
+            const offsetX = Math.cos(angle) * 25;
+            const offsetY = Math.sin(angle) * 25;
+            
+            // 绘制文字
+            const text = value.toString();
+            const textWidth = ctx.measureText(text).width;
+            const padding = 4;
+            
+            // 绘制背景框
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+            ctx.fillRect(
+              x + offsetX - textWidth/2 - padding, 
+              y + offsetY - 8 - padding, 
+              textWidth + padding * 2, 
+              16 + padding * 2
+            );
+            
+            // 绘制边框
+            ctx.strokeStyle = 'rgba(255, 207, 104, 0.6)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(
+              x + offsetX - textWidth/2 - padding, 
+              y + offsetY - 8 - padding, 
+              textWidth + padding * 2, 
+              16 + padding * 2
+            );
+            
+            // 绘制文字
+            ctx.fillStyle = '#FFCF68';
+            ctx.fillText(text, x + offsetX, y + offsetY);
+          });
+          
+          ctx.restore();
+        }
+      };
+
+      new Chart(ctx, {
+        type: 'radar',
+        plugins: [vertexLabelPlugin],
+        data: {
+          labels: window.tenGodsChartData.labels,
+          datasets: [{
+            label: '十神评分',
+            data: window.tenGodsChartData.values,
+            backgroundColor: 'rgba(255, 207, 104, 0.2)',
+            borderColor: 'rgba(255, 207, 104, 1)',
+            borderWidth: 3,
+            pointBackgroundColor: 'rgba(255, 207, 104, 1)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            pointHoverBackgroundColor: 'rgba(230, 184, 77, 1)',
             pointHoverBorderColor: '#fff',
             pointHoverBorderWidth: 2
           }]

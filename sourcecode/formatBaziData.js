@@ -100,7 +100,11 @@ export async function formatBaziData(baziData, req) {
           "EarthlyBranch": {
             "EarthlyBranch": "${yearPillarInfo?.地支?.地支 || ''}",
             "Element": "${yearPillarInfo?.地支?.五行 || ''}",
-            "YinYang": "${yearPillarInfo?.地支?.阴阳 || ''}"
+            "YinYang": "${yearPillarInfo?.地支?.阴阳 || ''}",
+            "HiddenStem": {
+              "HeavenlyStem": "${yearPillarInfo?.地支?.藏干?.主气?.天干 || ''}",
+              "TenGod": "${yearPillarInfo?.地支?.藏干?.主气?.十神 || ''}",
+            }
           }
         },
         "monthPillarInfo": {
@@ -108,12 +112,16 @@ export async function formatBaziData(baziData, req) {
             "HeavenlyStem": "${monthPillarInfo?.天干?.天干 || ''}",
             "Element": "${monthPillarInfo?.天干?.五行 || ''}",
             "YinYang": "${monthPillarInfo?.天干?.阴阳 || ''}",
-            "TenGod": "${monthPillarInfo?.天干?.十神 || ''}"
+            "TenGod": "${monthPillarInfo?.天干?.十神 || ''}",
           },
           "EarthlyBranch": {
             "EarthlyBranch": "${monthPillarInfo?.地支?.地支 || ''}",
             "Element": "${monthPillarInfo?.地支?.五行 || ''}",
-            "YinYang": "${monthPillarInfo?.地支?.阴阳 || ''}"
+            "YinYang": "${monthPillarInfo?.地支?.阴阳 || ''}",
+            "HiddenStem": {
+              "HeavenlyStem": "${monthPillarInfo?.地支?.藏干?.主气?.天干 || ''}",
+              "TenGod": "${monthPillarInfo?.地支?.藏干?.主气?.十神 || ''}"
+            }
           }
         },
         "dayPillarInfo": {
@@ -125,7 +133,11 @@ export async function formatBaziData(baziData, req) {
           "EarthlyBranch": {
             "EarthlyBranch": "${dayPillarInfo?.地支?.地支 || ''}",
             "Element": "${dayPillarInfo?.地支?.五行 || ''}",
-            "YinYang": "${dayPillarInfo?.地支?.阴阳 || ''}"
+            "YinYang": "${dayPillarInfo?.地支?.阴阳 || ''}",
+            "HiddenStem": {
+              "HeavenlyStem": "${dayPillarInfo?.地支?.藏干?.主气?.天干 || ''}",
+              "TenGod": "${dayPillarInfo?.地支?.藏干?.主气?.十神 || ''}"
+            }
           }
         },
         "hourPillarInfo": {
@@ -138,7 +150,11 @@ export async function formatBaziData(baziData, req) {
           "EarthlyBranch": {
             "EarthlyBranch": "${hourPillarInfo?.地支?.地支 || ''}",
             "Element": "${hourPillarInfo?.地支?.五行 || ''}",
-            "YinYang": "${hourPillarInfo?.地支?.阴阳 || ''}"
+            "YinYang": "${hourPillarInfo?.地支?.阴阳 || ''}",
+            "HiddenStem": {
+              "HeavenlyStem": "${hourPillarInfo?.地支?.藏干?.主气?.天干 || ''}",
+              "TenGod": "${hourPillarInfo?.地支?.藏干?.主气?.十神 || ''}"
+            }
           }
         },
         "CurrentDaYun": {
