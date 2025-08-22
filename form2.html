@@ -488,6 +488,56 @@
        border: 1px solid #feb2b2;
      }
 
+     /* 生成报告 Loading 覆盖层与进度条 */
+     .loading-overlay {
+       position: fixed;
+       inset: 0;
+       background: rgba(0, 0, 0, 0.35);
+       display: none;
+       align-items: center;
+       justify-content: center;
+       z-index: 9999;
+     }
+     .loading-card {
+       width: 90%;
+       max-width: 420px;
+       background: #ffffff;
+       border-radius: 14px;
+       padding: 20px;
+       border: 1px solid rgba(255, 207, 104, 0.45);
+       box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+       text-align: center;
+     }
+     .loading-title {
+       font-weight: 700;
+       color: #2d3748;
+       margin-bottom: 10px;
+     }
+     .loading-subtitle {
+       color: #718096;
+       font-size: 0.9rem;
+       margin-bottom: 16px;
+     }
+     .progress-track {
+       width: 100%;
+       height: 12px;
+       background: #edf2f7;
+       border-radius: 8px;
+       overflow: hidden;
+       border: 1px solid #e2e8f0;
+     }
+     .progress-bar {
+       height: 100%;
+       width: 0%;
+       background: linear-gradient(135deg, #FFCF68, #E6B84D);
+       transition: width 0.3s ease;
+     }
+     .progress-text {
+       margin-top: 10px;
+       color: #4a5568;
+       font-size: 0.9rem;
+     }
+
      /* 响应式调整 */
      @media (max-width: 768px) {
        body {
@@ -992,6 +1042,17 @@
         </button>
       </div>
     </div>
+    <!-- Loading 覆盖层 -->
+    <div id="reportLoading" class="loading-overlay" aria-hidden="true">
+      <div class="loading-card">
+        <div class="loading-title">正在生成报告</div>
+        <div class="loading-subtitle">请稍候，AI 正在分析你的八字数据...</div>
+        <div class="progress-track">
+          <div id="reportProgress" class="progress-bar"></div>
+        </div>
+        <div id="progressText" class="progress-text">0%</div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -1008,13 +1069,49 @@
       const originalText = report2Btn.innerHTML;
       
       try {
+        // 显示 loading 覆盖层并启动假进度
         report2Btn.innerHTML = '<div class="loading"><div class="spinner"></div>生成中...</div>';
         report2Btn.disabled = true;
+
+        const overlay = document.getElementById('reportLoading');
+        const bar = document.getElementById('reportProgress');
+        const text = document.getElementById('progressText');
+        overlay.style.display = 'flex';
+
+        // 线性假进度：先较快到 70%，然后缓慢到 90%，等待请求完成后补到 100%
+        let progress = 0;
+        const fastTimer = setInterval(() => {
+          progress = Math.min(progress + 2, 70);
+          bar.style.width = progress + '%';
+          text.textContent = progress + '%';
+          if (progress >= 70) clearInterval(fastTimer);
+        }, 80);
+        const slowTimer = setInterval(() => {
+          if (progress < 90) {
+            progress += 1;
+            bar.style.width = progress + '%';
+            text.textContent = progress + '%';
+          }
+        }, 400);
         
+        // 从 localStorage 取出已保存的八字数据，作为后端生成报告的输入
+        let payload = {};
+        try {
+          const saved = localStorage.getItem('baziData');
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (parsed && parsed.baziData && Object.keys(parsed.baziData).length > 0) {
+              payload = parsed.baziData; // 后端需要的是扁平的八字对象（包含“八字”、“年柱”等字段）
+            }
+          }
+        } catch (e) {
+          console.warn('本地八字数据解析失败，将使用会话中的数据（如果有）生成：', e);
+        }
+
         const response = await fetch('/generate-report', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({})
+          body: JSON.stringify(payload)
         });
         
         if (!response.ok) {
@@ -1022,11 +1119,18 @@
           if (response.status === 400) {
             // 显示友好的错误提示
             alert(`❌ ${errorData.error}\n\n📝 ${errorData.message}\n\n👆 ${errorData.action}`);
+            // 关闭覆盖层
+            overlay.style.display = 'none';
             return;
           }
           throw new Error(errorData.error || '生成报告失败');
         }
         
+        // 完成进度到 100%
+        progress = 100;
+        bar.style.width = '100%';
+        text.textContent = '100%';
+        setTimeout(() => { overlay.style.display = 'none'; }, 200);
         window.location.href = 'report2.html';
         
       } catch (err) {
@@ -1034,6 +1138,8 @@
         resultDiv.innerHTML += `<div class="error">生成报告时出错: ${err.message}</div>`;
         report2Btn.innerHTML = originalText;
         report2Btn.disabled = false;
+        const overlay = document.getElementById('reportLoading');
+        overlay.style.display = 'none';
       }
     }
 

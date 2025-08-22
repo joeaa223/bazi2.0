@@ -195,6 +195,7 @@
       align-items: center;
       margin: 20px 0;
       height: 400px;
+      position: relative;
     }
 
     .radar-chart {
@@ -204,20 +205,94 @@
       height: 100%;
     }
 
-    .tengods-chart-container {
-      display: flex;
-      justify-content: center;
+    /* 移动端放大按钮 */
+    .zoom-btn {
+      display: none;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 8px 10px;
+      background: linear-gradient(135deg, #FFCF68, #E6B84D);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      line-height: 1;
+      box-shadow: 0 6px 18px rgba(255, 207, 104, 0.35);
+    }
+
+    /* 模态层用于放大查看雷达图 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 2000;
       align-items: center;
-      margin: 20px 0;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-content {
+      position: relative;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 16px;
+      width: 100%;
+      max-width: 900px;
+      border: 1px solid rgba(255, 207, 104, 0.35);
+    }
+    .modal-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: transparent;
+      border: none;
+      font-size: 1.4rem;
+      color: #2d3748;
+      cursor: pointer;
+    }
+    #radarChartLarge {
+      width: 100%;
+      height: 400px;
+    }
+    #tenGodsChartLarge {
+      width: 100%;
       height: 400px;
     }
 
-    .tengods-chart {
-      max-width: 800px;
-      max-height: 400px;
-      width: 100%;
-      height: 100%;
-    }
+         .tengods-chart-container {
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       margin: 20px 0;
+       height: 400px;
+       position: relative;
+     }
+
+         .tengods-chart {
+       max-width: 800px;
+       max-height: 400px;
+       width: 100%;
+       height: 100%;
+     }
+
+     /* 十神图表放大按钮 */
+     .zoom-btn-tengods {
+       display: none;
+       position: absolute;
+       top: 10px;
+       right: 10px;
+       padding: 8px 10px;
+       background: linear-gradient(135deg, #FFCF68, #E6B84D);
+       color: #ffffff;
+       border: none;
+       border-radius: 8px;
+       cursor: pointer;
+       font-size: 0.9rem;
+       line-height: 1;
+       box-shadow: 0 6px 18px rgba(255, 207, 104, 0.35);
+     }
 
     .content-grid {
       display: grid;
@@ -239,6 +314,39 @@
       box-shadow: 0 12px 40px rgba(255, 207, 104, 0.2);
       border-color: rgba(255, 207, 104, 0.4);
     }
+
+    /* 四柱泡泡展示 */
+    .pillars-bubbles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .pillar-bubble-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 207, 104, 0.25);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .pillar-bubble-title {
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .bubble-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .bubble {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      border: 1px solid rgba(226, 232, 240, 1);
+      background: #ffffff;
+      color: #2d3748;
+    }
+    .bubble-stem { background: linear-gradient(135deg, rgba(255,207,104,0.18), rgba(230,184,77,0.18)); border-color: rgba(255, 207, 104, 0.6); }
+    .bubble-branch { background: linear-gradient(135deg, rgba(49,130,206,0.1), rgba(43,108,176,0.1)); border-color: rgba(49,130,206,0.45); }
+    .bubble-hidden { background: rgba(237,137,54,0.12); border-color: rgba(237, 137, 54, 0.5); font-size: 0.85rem; }
+    .bubble-tengod { background: linear-gradient(135deg, rgba(159,122,234,0.12), rgba(128,90,213,0.12)); border-color: rgba(128,90,213,0.5); font-weight: 600; font-size: 0.85rem; }
 
     .card-title {
       display: flex;
@@ -359,7 +467,205 @@
         max-width: 350px;
         max-height: 350px;
       }
+
+             .zoom-btn {
+         display: inline-flex;
+         align-items: center;
+         gap: 6px;
+         background: rgba(255, 165, 0, 0.3) !important;
+         border: 2px solid rgba(255, 202, 103, 0.8) !important;
+         color: rgba(254, 187, 61, 0.9) !important;
+         box-shadow: none !important;
+       }
+
+       .zoom-btn-tengods {
+         display: inline-flex;
+         align-items: center;
+         gap: 6px;
+         background: rgba(255, 165, 0, 0.3) !important;
+         border: 2px solid rgba(255, 202, 103, 0.8) !important;
+         color: rgba(254, 187, 61, 0.9) !important;
+         box-shadow: none !important;
+       }
+       
+       /* 移动端天干图片样式 */
+       .tian-gan-section {
+         padding: 20px;
+         margin: 15px 0;
+       }
+       
+       .tian-gan-images { 
+         grid-template-columns: repeat(2, minmax(150px, 1fr)); 
+         gap: 16px; 
+         margin: 15px 0 8px;
+       }
+       
+       .tian-gan-card { 
+         padding: 16px; 
+       }
+       
+       .tian-gan-card img { 
+         max-width: 100px; 
+         max-height: 100px; 
+       }
+       
+       .tian-gan-label { 
+         font-size: 0.9rem; 
+         margin-top: 12px; 
+       }
+       
+       .fusion-section {
+         margin-top: 20px;
+       }
+       
+       .fusion-description {
+         font-size: 1rem;
+         margin-bottom: 20px;
+       }
+       
+       .fusion-btn {
+         padding: 14px 28px;
+         font-size: 1rem;
+       }
+       
+       .fusion-result img { 
+         max-width: 350px; 
+         max-height: 350px; 
+       }
+       
+       .fusion-result h3 {
+         font-size: 1.2rem;
+       }
     }
+    /* 天干图片展示与融合 - 唯美风格 */
+    .tian-gan-section {
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 20px 0;
+      box-shadow: 0 20px 60px rgba(255,207,104,0.15);
+      border: 1px solid rgba(255,207,104,0.1);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    
+    
+    .tian-gan-images { 
+      display: grid; 
+      grid-template-columns: repeat(2, minmax(180px, 1fr)); 
+      gap: 24px; 
+      margin: 20px 0 10px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .tian-gan-card { 
+      background: rgba(255,255,255,0.95);
+      border: 2px solid rgba(255,207,104,0.2);
+      border-radius: 18px;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(255,207,104,0.1);
+    }
+    
+         .tian-gan-card img { 
+       max-width: 140px; 
+       max-height: 140px; 
+       width: auto; 
+       height: auto; 
+       border-radius: 16px; 
+       box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+       filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+     }
+    
+         .tian-gan-label { 
+       margin-top: 16px; 
+       font-weight: 700; 
+       color: #D97706;
+       font-size: 1rem;
+       text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+       position: relative;
+     }
+    
+    .fusion-section { 
+      margin-top: 30px; 
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .fusion-description {
+      color: #6B7280;
+      margin-bottom: 24px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      font-style: italic;
+      text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+    }
+    
+         .fusion-btn { 
+       padding: 16px 32px; 
+       background: #F59E0B;
+       color: #fff; 
+       border: 0; 
+       border-radius: 50px; 
+       cursor: pointer; 
+       font-size: 1.1rem;
+       font-weight: 600;
+       box-shadow: 0 8px 24px rgba(255,207,104,0.3);
+       position: relative;
+       overflow: hidden;
+       letter-spacing: 0.5px;
+     }
+    
+    .fusion-btn:disabled { 
+      opacity: 0.7; 
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: 0 4px 12px rgba(255,207,104,0.2);
+    }
+    
+         .fusion-result { 
+       display: none; 
+       margin-top: 30px;
+       text-align: center;
+     }
+     
+          .fusion-result img { 
+       max-width: 450px; 
+       max-height: 450px; 
+       width: auto; 
+       height: auto; 
+       border-radius: 20px; 
+       box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+       border: 3px solid rgba(255,207,104,0.3);
+       display: block;
+       margin: 0 auto;
+     }
+     
+     .fusion-result h3 {
+       color: #D97706;
+       margin-bottom: 20px;
+       font-size: 1.3rem;
+       font-weight: 700;
+       text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+     }
+     
+          .download-link {
+       display: inline-block;
+       margin: 16px auto 0;
+       padding: 12px 24px;
+       background: #10B981;
+       color: white;
+       text-decoration: none;
+       border-radius: 25px;
+       font-weight: 600;
+       box-shadow: 0 4px 16px rgba(16,185,129,0.3);
+     }
   </style>
 </head>
 <body>
@@ -381,14 +687,274 @@
             返回首页
         </a>
     </div>
+  
+     <!-- 放大雷达图模态层 -->
+   <div id="radarModal" class="modal-overlay" aria-hidden="true">
+     <div class="modal-content">
+       <button id="radarModalClose" class="modal-close" aria-label="关闭">×</button>
+       <canvas id="radarChartLarge"></canvas>
+     </div>
+   </div>
+   
+   <!-- 放大十神图表模态层 -->
+   <div id="tenGodsModal" class="modal-overlay" aria-hidden="true">
+     <div class="modal-content">
+       <button id="tenGodsModalClose" class="modal-close" aria-label="关闭">×</button>
+       <canvas id="tenGodsChartLarge"></canvas>
+     </div>
+   </div>
   <script>
-    let reportData = null;
+         let reportData = null;
+     let largeRadarChart = null;
+     let largeTenGodsChart = null;
+
+    // 天干到图片映射（已更新为实际文件名）
+    const tianGanToImage = {
+      '甲': 'jia.jpg','乙': 'yi.jpg','丙': 'bing.jpg','丁': 'ding.jpg','戊': 'wu.jpg',
+      '己': 'ji.jpg','庚': 'geng.jpg','辛': 'xin.jpg','壬': 'ren.jpg','癸': 'gui.jpg'
+    };
+
+    // 根据 baziData 显示四柱天干图片
+    function displayTianGanImages(baziData) {
+      try{
+        const container = document.getElementById('tianGanImages');
+        if (!container || !baziData) return;
+        const pillars = ['年柱','月柱','日柱','时柱'];
+        const tgs = [];
+        pillars.forEach(p => {
+          const tg = baziData[p]?.天干?.天干;
+          const img = tg ? tianGanToImage[tg] : null;
+          if (tg && img) tgs.push({ pillar: p, tianGan: tg, image: img });
+        });
+        container.innerHTML = tgs.map(item => `
+          <div class="tian-gan-card">
+            <img src="/img/${item.image}" alt="${item.pillar}${item.tianGan}">
+            <div class="tian-gan-label">${item.pillar} - ${item.tianGan}</div>
+          </div>
+        `).join('');
+        window.currentTianGans = tgs;
+      }catch(e){ console.warn('显示天干图片失败:', e); }
+    }
+
+    // 渲染天干图片：先尝试从会话取，失败则从本地存储取
+    async function ensureTianGanImagesRendered(){
+      try{
+        const res = await fetch('/get-bazi');
+        if(res.ok){
+          const data = await res.json();
+          if (data && data.baziData) {
+            displayTianGanImages(data.baziData);
+            return;
+          }
+        }
+      }catch(e){ /* ignore */ }
+      try{
+        const saved = localStorage.getItem('baziData');
+        if(saved){
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.baziData) {
+            displayTianGanImages(parsed.baziData);
+          }
+        }
+      }catch(e){ console.warn('本地天干图片渲染失败:', e); }
+    }
+
+    // AI图片融合 - 生成全新图片
+    async function startImageFusion() {
+      try{
+        const tgs = (window.currentTianGans || []).slice(0, 4);
+        if (tgs.length < 4) { 
+          alert('❌ 需要四张天干图片才能进行AI融合\n请确保八字数据已正确生成'); 
+          return; 
+        }
+        
+        const btn = document.getElementById('fusionBtn');
+        const result = document.getElementById('fusionResult');
+        
+        // 显示加载状态
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI正在创作...';
+        
+        const resp = await fetch('/api/fuse-images', {
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            tianGans: tgs.map(x => ({ 
+              pillar: x.pillar, 
+              tianGan: x.tianGan, 
+              imagePath: `/img/${x.image}` 
+            })) 
+          })
+        });
+        
+        if (!resp.ok) {
+          const errorData = await resp.json().catch(() => ({}));
+          throw new Error(errorData.message || `服务器错误 ${resp.status}`);
+        }
+        
+        const data = await resp.json();
+        const url = data.fusedImageDataUrl;
+        
+        if (!url) {
+          throw new Error('AI未返回生成的图片数据');
+        }
+        
+        // 显示AI生成的全新图片
+        document.getElementById('fusedImage').src = url;
+        const download = document.getElementById('downloadFused');
+        if (download) {
+          download.href = url;
+          download.download = `八字天干融合-${new Date().getTime()}.png`;
+        }
+        result.style.display = 'block';
+        
+        // 恢复按钮状态
+        btn.innerHTML = '🎨 重新生成';
+        btn.disabled = false;
+        
+      }catch(e){
+        console.error('AI图片融合失败:', e);
+        
+        // 显示具体错误信息
+        let errorMsg = '🤖 AI图片融合失败\n\n';
+        if (e.message.includes('401') || e.message.includes('403')) {
+          errorMsg += '❌ API密钥无效或权限不足\n请检查GEMINI_API_KEY是否正确配置';
+        } else if (e.message.includes('500')) {
+          errorMsg += '❌ 服务器内部错误\n请稍后重试或联系管理员';
+        } else {
+          errorMsg += `❌ ${e.message}\n\n💡 请确保：\n- 网络连接正常\n- API服务可用\n- 图片文件存在`;
+        }
+        
+        alert(errorMsg);
+        
+        // 恢复按钮
+        const btn = document.getElementById('fusionBtn');
+        if (btn) {
+          btn.innerHTML = '🔄 重试融合';
+          btn.disabled = false;
+        }
+      }
+    }
+
+    // 规范化中文标点：移除句末标点后的多余逗号等，如 “。，”、“。，”
+    function sanitizeChinesePunctuation(text){
+      if(typeof text !== 'string') return text;
+      let t = text;
+      // 去掉句末标点后紧跟的逗号/顿号/空格
+      t = t.replace(/([。！？；])\s*[，,]/g, '$1');
+      // 处理重复句号或混合（可选）
+      t = t.replace(/。{2,}/g, '。');
+      return t;
+    }
+
+    // 生成四柱泡泡 HTML
+    function buildPillarsBubbles(baziData){
+      try{
+        if(!baziData) return '';
+        const pillarsOrder = [
+          ['年柱','年柱'],
+          ['月柱','月柱'],
+          ['日柱','日柱'],
+          ['时柱','时柱']
+        ];
+        const cards = pillarsOrder.map(([key,label]) => {
+          const p = baziData[key] || {};
+          const stem = p.天干?.天干 || '';
+          const stemYY = p.天干?.阴阳 || '';
+          const stemTG = p.天干?.十神 || '';
+          const branch = p.地支?.地支 || '';
+          const branchYY = p.地支?.阴阳 || '';
+          const mainHiddenStem = p.地支?.藏干?.主气?.天干 || '';
+          const mainHiddenTenGod = p.地支?.藏干?.主气?.十神 || '';
+          if(!stem && !branch) return '';
+          return `
+            <div class="pillar-bubble-card">
+              <div class="pillar-bubble-title">${label}</div>
+              <div class="bubble-row">
+                <span class="bubble bubble-stem">【天干】${stem || '—'}${stemYY ? ` · ${stemYY}` : ''}${stemTG ? ` · ${stemTG}` : ''}</span>
+                <span class="bubble bubble-branch">【地支】${branch || '—'}${branchYY ? ` · ${branchYY}` : ''}</span>
+              </div>
+              ${(mainHiddenStem || mainHiddenTenGod) ? `
+              <div class="bubble-row" style="margin-top:10px;">
+                <span class="bubble bubble-hidden">【藏干】${mainHiddenStem}${mainHiddenTenGod ? ` · ${mainHiddenTenGod}` : ''}</span>
+              </div>` : ''}
+            </div>
+          `;
+        }).join('');
+        if(!cards.trim()) return '';
+        // 渲染后填充天干图片
+        setTimeout(() => { try{ ensureTianGanImagesRendered(); } catch(_){} }, 0);
+        return `
+          <div class="section">
+            <div class="section-header">
+              <i class="fas fa-bahai section-icon"></i>
+              <h2 class="section-title">四柱结构</h2>
+            </div>
+            <div class="pillars-bubbles">${cards}</div>
+          </div>
+
+          <div class="section">
+            <div class="section-header">
+              <i class="fas fa-images section-icon"></i>
+              <h2 class="section-title">天干能量图</h2>
+            </div>
+            <div class="tian-gan-section">
+              <div id="tianGanImages" class="tian-gan-images"></div>
+              <div class="fusion-section">
+                <p class="fusion-description">
+                  ✨ 基于您的八字天干，AI将创造性地融合四张天干图片，生成一张独特的艺术作品
+                </p>
+                <button id="fusionBtn" class="fusion-btn" onclick="startImageFusion()">
+                  <i class="fas fa-magic"></i> 🎨 AI创作融合图片
+                </button>
+                <div id="fusionResult" class="fusion-result">
+                  <h3>✨ 融合结果</h3>
+                  <img id="fusedImage" alt="融合结果">
+                  <a id="downloadFused" class="download-link" download="bazi-fused.png">
+                    <i class="fas fa-download"></i> 下载融合图片
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }catch(e){
+        console.warn('构建四柱泡泡失败:', e);
+        return '';
+      }
+    }
+
+    // 获取 BaZi 数据（优先 session，其次本地）并返回泡泡区块 HTML
+    async function fetchBaziSectionHtml(){
+      try{
+        const res = await fetch('/get-bazi');
+        if(res.ok){
+          const data = await res.json();
+          return buildPillarsBubbles(data.baziData);
+        }
+      }catch(e){
+        // ignore and fallback to localStorage
+      }
+      try{
+        const saved = localStorage.getItem('baziData');
+        if(saved){
+          const parsed = JSON.parse(saved);
+          return buildPillarsBubbles(parsed?.baziData);
+        }
+      }catch(e){
+        console.warn('读取本地 BaZi 失败:', e);
+      }
+      return '';
+    }
 
     // 获取报告数据
     async function fetchReport() {
       const reportContainer = document.getElementById('reportContainer');
       
       try {
+        // 提前获取四柱泡泡区块
+        const pillarsSectionHtml = await fetchBaziSectionHtml();
+        
         const response = await fetch('/get-report');
         
         if (!response.ok) {
@@ -410,18 +976,20 @@
         // Format the report based on content type
         if (typeof report === 'string') {
           // Plain text report
+          const cleanText = sanitizeChinesePunctuation(report);
           reportContainer.innerHTML = `
             <div class="fade-in">
+              ${pillarsSectionHtml}
               <div class="section">
                 <div class="content-card full-width-card">
-                  <div class="summary-text">${report.replace(/\n/g, '<br>')}</div>
+                  <div class="summary-text">${cleanText.replace(/\n/g, '<br>')}</div>
                 </div>
               </div>
             </div>
           `;
         } else {
           // JSON structured report
-          displayReport(report);
+          displayReport(report, pillarsSectionHtml);
         }
       } catch (error) {
         reportContainer.innerHTML = `
@@ -434,7 +1002,7 @@
     }
 
     // 显示报告
-    function displayReport(report) {
+    function displayReport(report, prefixHtml = '') {
       const reportContainer = document.getElementById('reportContainer');
       let html = '';
 
@@ -447,6 +1015,7 @@
             </div>
             <div class="chart-section">
               <div class="radar-chart-container">
+                <button id="zoomRadarBtn" class="zoom-btn" title="放大查看"><i class="fas fa-magnifying-glass-plus"></i></button>
                 <canvas id="radarChart" class="radar-chart"></canvas>
               </div>
             </div>
@@ -478,11 +1047,12 @@
               <i class="fas fa-yin-yang section-icon"></i>
               <h2 class="section-title">十神评分分析</h2>
             </div>
-            <div class="chart-section">
-              <div class="tengods-chart-container">
-                <canvas id="tenGodsChart" class="tengods-chart"></canvas>
-              </div>
-            </div>
+                         <div class="chart-section">
+               <div class="tengods-chart-container">
+                 <button id="zoomTenGodsBtn" class="zoom-btn-tengods" title="放大查看"><i class="fas fa-magnifying-glass-plus"></i></button>
+                 <canvas id="tenGodsChart" class="tengods-chart"></canvas>
+               </div>
+             </div>
           </div>
         `;
         
@@ -572,6 +1142,10 @@
       }
 
       if (report.practicalAdvice) {
+        const adviceItemsRaw = Array.isArray(report.practicalAdvice) ? report.practicalAdvice : [report.practicalAdvice];
+        const adviceItems = adviceItemsRaw
+          .filter(Boolean)
+          .map(i => sanitizeChinesePunctuation(String(i)));
         html += `
           <div class="section">
             <div class="section-header">
@@ -583,7 +1157,9 @@
                 <i class="fas fa-lightbulb"></i>
                 生活指导
               </div>
-              <div class="summary-text">${report.practicalAdvice}</div>
+              <ul class="custom-list">
+                ${adviceItems.map(item => `<li>${item}</li>`).join('')}
+              </ul>
             </div>
           </div>
         `;
@@ -615,7 +1191,7 @@
         `;
       }
 
-      reportContainer.innerHTML = html;
+      reportContainer.innerHTML = prefixHtml + html;
       
       // 生成雷达图
       if (window.radarChartData) {
@@ -624,13 +1200,149 @@
         }, 100);
       }
       
-      // 生成十神图表
-      if (window.tenGodsChartData) {
-        setTimeout(() => {
-          createTenGodsChart();
-        }, 200);
-      }
+                // 生成十神图表
+     if (window.tenGodsChartData) {
+       setTimeout(() => {
+         createTenGodsChart();
+       }, 200);
+     }
+   }
+
+  // 打开雷达图模态层并绘制大图
+  function openRadarModal() {
+    const modal = document.getElementById('radarModal');
+    const closeBtn = document.getElementById('radarModalClose');
+    modal.style.display = 'flex';
+
+    // 销毁旧实例避免重复绑定
+    if (largeRadarChart) {
+      try { largeRadarChart.destroy(); } catch (e) {}
+      largeRadarChart = null;
     }
+
+    const ctx = document.getElementById('radarChartLarge');
+    if (!ctx || !window.radarChartData) return;
+
+    largeRadarChart = new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: window.radarChartData.labels,
+        datasets: [{
+          label: '人格维度评分（放大）',
+          data: window.radarChartData.values,
+          backgroundColor: 'rgba(255, 207, 104, 0.2)',
+          borderColor: 'rgba(255, 207, 104, 1)',
+          borderWidth: 3,
+          pointBackgroundColor: 'rgba(255, 207, 104, 1)',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          r: {
+            beginAtZero: true,
+            min: 0,
+            max: 10,
+            ticks: { stepSize: 2, color: '#666' },
+            grid: { color: 'rgba(102, 102, 102, 0.3)' },
+            angleLines: { color: 'rgba(102, 102, 102, 0.3)' },
+            pointLabels: { color: '#000' }
+          }
+        }
+      }
+    });
+
+    // 关闭事件
+    closeBtn.onclick = closeRadarModal;
+    modal.onclick = (e) => { if (e.target === modal) closeRadarModal(); };
+    document.addEventListener('keydown', escCloseHandler);
+  }
+
+  function escCloseHandler(e){ if (e.key === 'Escape') closeRadarModal(); }
+
+  function closeRadarModal() {
+    const modal = document.getElementById('radarModal');
+    modal.style.display = 'none';
+    if (largeRadarChart) {
+      try { largeRadarChart.destroy(); } catch (e) {}
+      largeRadarChart = null;
+    }
+         document.removeEventListener('keydown', escCloseHandler);
+   }
+
+   // 打开十神图表模态层并绘制大图
+   function openTenGodsModal() {
+     const modal = document.getElementById('tenGodsModal');
+     const closeBtn = document.getElementById('tenGodsModalClose');
+     modal.style.display = 'flex';
+
+     // 销毁旧实例避免重复绑定
+     if (largeTenGodsChart) {
+       try { largeTenGodsChart.destroy(); } catch (e) {}
+       largeTenGodsChart = null;
+     }
+
+     const ctx = document.getElementById('tenGodsChartLarge');
+     if (!ctx || !window.tenGodsChartData) return;
+
+     largeTenGodsChart = new Chart(ctx, {
+       type: 'radar',
+       data: {
+         labels: window.tenGodsChartData.labels,
+         datasets: [{
+           label: '十神评分（放大）',
+           data: window.tenGodsChartData.values,
+           backgroundColor: 'rgba(255, 207, 104, 0.2)',
+           borderColor: 'rgba(255, 207, 104, 1)',
+           borderWidth: 3,
+           pointBackgroundColor: 'rgba(255, 207, 104, 1)',
+           pointBorderColor: '#fff',
+           pointBorderWidth: 2,
+           pointRadius: 5,
+           pointHoverRadius: 7
+         }]
+       },
+       options: {
+         responsive: true,
+         maintainAspectRatio: false,
+         plugins: { legend: { display: false } },
+         scales: {
+           r: {
+             beginAtZero: true,
+             min: 0,
+             max: 10,
+             ticks: { stepSize: 2, color: '#666' },
+             grid: { color: 'rgba(102, 102, 102, 0.3)' },
+             angleLines: { color: 'rgba(102, 102, 102, 0.3)' },
+             pointLabels: { color: '#000' }
+           }
+         }
+       }
+     });
+
+     // 关闭事件
+     closeBtn.onclick = closeTenGodsModal;
+     modal.onclick = (e) => { if (e.target === modal) closeTenGodsModal(); };
+     document.addEventListener('keydown', escCloseHandlerTenGods);
+   }
+
+   function escCloseHandlerTenGods(e){ if (e.key === 'Escape') closeTenGodsModal(); }
+
+   function closeTenGodsModal() {
+     const modal = document.getElementById('tenGodsModal');
+     modal.style.display = 'none';
+     if (largeTenGodsChart) {
+       try { largeTenGodsChart.destroy(); } catch (e) {}
+       largeTenGodsChart = null;
+     }
+     document.removeEventListener('keydown', escCloseHandlerTenGods);
+   }
 
     // 生成雷达图
     function createRadarChart() {
@@ -781,157 +1493,170 @@
           }
         }
       });
-    }
 
-    function createTenGodsChart() {
-      const ctx = document.getElementById('tenGodsChart');
-      if (!ctx || !window.tenGodsChartData) return;
+           // 绑定放大按钮
+     const zoomBtn = document.getElementById('zoomRadarBtn');
+     if (zoomBtn) {
+       zoomBtn.onclick = () => openRadarModal();
+     }
+   }
 
-      // 自定义插件：在顶点显示数字
-      const vertexLabelPlugin = {
-        id: 'tenGodsVertexLabels',
-        afterDraw: function(chart) {
-          const ctx = chart.ctx;
-          const meta = chart.getDatasetMeta(0);
-          
-          if (!meta.data) return;
-          
-          ctx.save();
-          ctx.font = 'bold 14px Noto Sans SC, Microsoft YaHei, sans-serif';
-          ctx.fillStyle = '#FFCF68';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          
-          meta.data.forEach((point, index) => {
-            const value = window.tenGodsChartData.values[index];
-            const x = point.x;
-            const y = point.y;
-            
-            // 计算标签位置，避免与轴标签重叠
-            const angle = (index * 2 * Math.PI) / meta.data.length - Math.PI / 2;
-            const offsetX = Math.cos(angle) * 25;
-            const offsetY = Math.sin(angle) * 25;
-            
-            // 绘制文字
-            const text = value.toString();
-            const textWidth = ctx.measureText(text).width;
-            const padding = 4;
-            
-            // 绘制背景框
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-            ctx.fillRect(
-              x + offsetX - textWidth/2 - padding, 
-              y + offsetY - 8 - padding, 
-              textWidth + padding * 2, 
-              16 + padding * 2
-            );
-            
-            // 绘制边框
-            ctx.strokeStyle = 'rgba(255, 207, 104, 0.6)';
-            ctx.lineWidth = 1;
-            ctx.strokeRect(
-              x + offsetX - textWidth/2 - padding, 
-              y + offsetY - 8 - padding, 
-              textWidth + padding * 2, 
-              16 + padding * 2
-            );
-            
-            // 绘制文字
-            ctx.fillStyle = '#FFCF68';
-            ctx.fillText(text, x + offsetX, y + offsetY);
-          });
-          
-          ctx.restore();
-        }
-      };
+   // 生成十神图表
+   function createTenGodsChart() {
+     const ctx = document.getElementById('tenGodsChart');
+     if (!ctx || !window.tenGodsChartData) return;
 
-      new Chart(ctx, {
-        type: 'radar',
-        plugins: [vertexLabelPlugin],
-        data: {
-          labels: window.tenGodsChartData.labels,
-          datasets: [{
-            label: '十神评分',
-            data: window.tenGodsChartData.values,
-            backgroundColor: 'rgba(255, 207, 104, 0.2)',
-            borderColor: 'rgba(255, 207, 104, 1)',
-            borderWidth: 3,
-            pointBackgroundColor: 'rgba(255, 207, 104, 1)',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-            pointRadius: 6,
-            pointHoverRadius: 8,
-            pointHoverBackgroundColor: 'rgba(230, 184, 77, 1)',
-            pointHoverBorderColor: '#fff',
-            pointHoverBorderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: true,
-          plugins: {
-            legend: {
-              display: false
-            },
-            tooltip: {
-              backgroundColor: 'rgba(255, 255, 255, 0.9)',
-              titleColor: '#000000',
-              bodyColor: '#000000',
-              borderColor: 'rgba(255, 207, 104, 1)',
-              borderWidth: 1,
-              cornerRadius: 8,
-              displayColors: false,
-              callbacks: {
-                label: function(context) {
-                  return context.parsed.r + '/10';
-                }
-              }
-            }
-          },
-          scales: {
-            r: {
-              beginAtZero: true,
-              min: 0,
-              max: 10,
-              ticks: {
-                stepSize: 2,
-                color: '#666666',
-                font: {
-                  size: 12,
-                  family: 'Noto Sans SC, Microsoft YaHei, sans-serif'
-                },
-                backdropColor: 'transparent'
-              },
-              grid: {
-                color: 'rgba(102, 102, 102, 0.3)',
-                lineWidth: 1
-              },
-              angleLines: {
-                color: 'rgba(102, 102, 102, 0.3)',
-                lineWidth: 1
-              },
-              pointLabels: {
-                color: '#000000',
-                font: {
-                  size: 13,
-                  weight: '600',
-                  family: 'Noto Sans SC, Microsoft YaHei, sans-serif'
-                },
-                padding: 20
-              }
-            }
-          },
-          elements: {
-            line: {
-              tension: 0.1
-            }
-          },
-          interaction: {
-            intersect: false
-          }
-        }
-      });
-    }
+     // 自定义插件：在顶点显示数字
+     const vertexLabelPlugin = {
+       id: 'tenGodsVertexLabels',
+       afterDraw: function(chart) {
+         const ctx = chart.ctx;
+         const meta = chart.getDatasetMeta(0);
+         
+         if (!meta.data) return;
+         
+         ctx.save();
+         ctx.font = 'bold 14px Noto Sans SC, Microsoft YaHei, sans-serif';
+         ctx.fillStyle = '#FFCF68';
+         ctx.textAlign = 'center';
+         ctx.textBaseline = 'middle';
+         
+         meta.data.forEach((point, index) => {
+           const value = window.tenGodsChartData.values[index];
+           const x = point.x;
+           const y = point.y;
+           
+           // 计算标签位置，避免与轴标签重叠
+           const angle = (index * 2 * Math.PI) / meta.data.length - Math.PI / 2;
+           const offsetX = Math.cos(angle) * 25;
+           const offsetY = Math.sin(angle) * 25;
+           
+           // 绘制文字
+           const text = value.toString();
+           const textWidth = ctx.measureText(text).width;
+           const padding = 4;
+           
+           // 绘制背景框
+           ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+           ctx.fillRect(
+             x + offsetX - textWidth/2 - padding, 
+             y + offsetY - 8 - padding, 
+             textWidth + padding * 2, 
+             16 + padding * 2
+           );
+           
+           // 绘制边框
+           ctx.strokeStyle = 'rgba(255, 207, 104, 0.6)';
+           ctx.lineWidth = 1;
+           ctx.strokeRect(
+             x + offsetX - textWidth/2 - padding, 
+             y + offsetY - 8 - padding, 
+             textWidth + padding * 2, 
+             16 + padding * 2
+           );
+           
+           // 绘制文字
+           ctx.fillStyle = '#FFCF68';
+           ctx.fillText(text, x + offsetX, y + offsetY);
+         });
+         
+         ctx.restore();
+       }
+     };
+
+     new Chart(ctx, {
+       type: 'radar',
+       plugins: [vertexLabelPlugin],
+       data: {
+         labels: window.tenGodsChartData.labels,
+         datasets: [{
+           label: '十神评分',
+           data: window.tenGodsChartData.values,
+           backgroundColor: 'rgba(255, 207, 104, 0.2)',
+           borderColor: 'rgba(255, 207, 104, 1)',
+           borderWidth: 3,
+           pointBackgroundColor: 'rgba(255, 207, 104, 1)',
+           pointBorderColor: '#fff',
+           pointBorderWidth: 2,
+           pointRadius: 6,
+           pointHoverRadius: 8,
+           pointHoverBackgroundColor: 'rgba(230, 184, 77, 1)',
+           pointHoverBorderColor: '#fff',
+           pointHoverBorderWidth: 2
+         }]
+       },
+       options: {
+         responsive: true,
+         maintainAspectRatio: true,
+         plugins: {
+           legend: {
+             display: false
+           },
+           tooltip: {
+             backgroundColor: 'rgba(255, 255, 255, 0.9)',
+             titleColor: '#000000',
+             bodyColor: '#000000',
+             borderColor: 'rgba(255, 207, 104, 1)',
+             borderWidth: 1,
+             cornerRadius: 8,
+             displayColors: false,
+             callbacks: {
+               label: function(context) {
+                 return context.parsed.r + '/10';
+               }
+             }
+           }
+         },
+         scales: {
+           r: {
+             beginAtZero: true,
+             min: 0,
+             max: 10,
+             ticks: {
+               stepSize: 2,
+               color: '#666666',
+               font: {
+                 size: 12,
+                 family: 'Noto Sans SC, Microsoft YaHei, sans-serif'
+               },
+               backdropColor: 'transparent'
+             },
+             grid: {
+               color: 'rgba(102, 102, 102, 0.3)',
+               lineWidth: 1
+             },
+             angleLines: {
+               color: 'rgba(102, 102, 102, 0.3)',
+               lineWidth: 1
+             },
+             pointLabels: {
+               color: '#000000',
+               font: {
+                 size: 13,
+                 weight: '600',
+                 family: 'Noto Sans SC, Microsoft YaHei, sans-serif'
+               },
+               padding: 20
+             }
+           }
+         },
+         elements: {
+           line: {
+             tension: 0.1
+           }
+         },
+         interaction: {
+           intersect: false
+         }
+       }
+     });
+
+     // 绑定放大按钮
+     const zoomTenGodsBtn = document.getElementById('zoomTenGodsBtn');
+     if (zoomTenGodsBtn) {
+       zoomTenGodsBtn.onclick = () => openTenGodsModal();
+     }
+   }
 
     // 页面加载时获取报告
     window.addEventListener('DOMContentLoaded', fetchReport);
