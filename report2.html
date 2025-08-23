@@ -722,9 +722,7 @@
    </div>
   <!-- 融合图片预览模态层 -->
   <div id="fusedImageModal" class="modal-overlay" aria-hidden="true">
-    <div class="modal-content" style="max-width: 1000px; display:flex; align-items:center; justify-content:center; background: transparent; box-shadow: none; border: none;">
-      <img id="fusedImageLarge" alt="融合图片预览" style="max-width: 92vw; max-height: 88vh; border-radius: 12px; border: 2px solid rgba(0,0,0,0.08); box-shadow: 0 20px 60px rgba(0,0,0,0.35); display:block;" />
-    </div>
+    <img id="fusedImageLarge" alt="融合图片预览" style="max-width: 92vw; max-height: 88vh; border-radius: 12px; border: 2px solid rgba(0,0,0,0.08); box-shadow: 0 20px 60px rgba(0,0,0,0.35); display:block; cursor: pointer;" />
   </div>
   <script>
          let reportData = null;
@@ -874,7 +872,27 @@
       if (!modal || !img) return;
       img.src = src || document.getElementById('fusedImage')?.src || '';
       modal.style.display = 'flex';
-      modal.onclick = (e) => { if (e.target === modal) closeFusedImageModal(); };
+      
+      // 修复电脑模式点击空白处无法返回的问题 - 使用更可靠的事件处理
+      const handleModalClick = (e) => {
+        // 检查点击的是否为模态层背景（不是图片）
+        if (e.target === modal) {
+          closeFusedImageModal();
+        }
+      };
+      
+      // 移除旧的事件监听器，避免重复绑定
+      modal.removeEventListener('click', handleModalClick);
+      modal.addEventListener('click', handleModalClick);
+      
+      // 防止图片点击事件冒泡
+      const handleImgClick = (e) => {
+        e.stopPropagation();
+      };
+      
+      img.removeEventListener('click', handleImgClick);
+      img.addEventListener('click', handleImgClick);
+      
       if (!fusedImgEscHandlerBound){
         document.addEventListener('keydown', fusedImgEscHandler);
         fusedImgEscHandlerBound = true;
@@ -957,7 +975,7 @@
               <div id="tianGanImages" class="tian-gan-images"></div>
               <div class="fusion-section">
                 <p class="fusion-description">
-                  ✨ 基于您的八字天干，AI将创造性地融合四张天干图片，生成一张独特的艺术作品
+                  ✨ 基于您的八字天干，AI将创造性地融合四张天干图片。请点击并查看
                 </p>
                 <button id="fusionBtn" class="fusion-btn" onclick="startImageFusion()">
                   <i class="fas fa-magic"></i> 🎨 AI创作融合图片
