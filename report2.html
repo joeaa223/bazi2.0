@@ -490,52 +490,69 @@
        
        /* 移动端天干图片样式 */
        .tian-gan-section {
-         padding: 20px;
-         margin: 15px 0;
+         padding: 16px;
+         margin: 12px 0;
        }
        
        .tian-gan-images { 
-         grid-template-columns: repeat(2, minmax(150px, 1fr)); 
-         gap: 16px; 
-         margin: 15px 0 8px;
-       }
-       
-       .tian-gan-card { 
-         padding: 16px; 
-       }
-       
-       .tian-gan-card img { 
-         max-width: 100px; 
-         max-height: 100px; 
-       }
-       
-       .tian-gan-label { 
-         font-size: 0.9rem; 
-         margin-top: 12px; 
-       }
-       
-       .fusion-section {
-         margin-top: 20px;
-       }
-       
-       .fusion-description {
-         font-size: 1rem;
-         margin-bottom: 20px;
-       }
-       
-       .fusion-btn {
-         padding: 14px 28px;
-         font-size: 1rem;
-       }
-       
-       .fusion-result img { 
-         max-width: 350px; 
-         max-height: 350px; 
-       }
-       
-       .fusion-result h3 {
-         font-size: 1.2rem;
-       }
+          grid-template-columns: 1fr !important; 
+          gap: 12px; 
+          margin: 12px 0 6px;
+          justify-items: center;
+          width: 100%;
+          padding: 0 12px;
+          box-sizing: border-box;
+        }
+        
+        .tian-gan-card { 
+          padding: 14px; 
+          width: 100% !important;
+          max-width: 420px;
+          margin: 0 auto;
+          box-sizing: border-box;
+        }
+        
+        .tian-gan-card img { 
+          max-width: 120px; 
+          max-height: 120px; 
+          display: block;
+          margin: 0 auto;
+          object-fit: contain;
+        }
+        
+        .tian-gan-label { 
+          font-size: 0.95rem; 
+          margin-top: 10px; 
+          text-align: center;
+        }
+        
+        .fusion-section {
+          margin-top: 16px;
+        }
+        
+        .fusion-description {
+          font-size: 0.95rem;
+          margin-bottom: 14px;
+        }
+        
+        .fusion-btn {
+          padding: 12px 20px;
+          font-size: 1rem;
+          width: 90%;
+          max-width: 320px;
+        }
+        
+        .fusion-result img { 
+          max-width: 120px !important; 
+          max-height: 120px !important; 
+          width: 120px !important;
+          height: auto !important;
+          margin: 0 auto; 
+        }
+        
+        .fusion-result h3 {
+          font-size: 1.2rem;
+        }
     }
     /* 天干图片展示与融合 - 唯美风格 */
     .tian-gan-section {
@@ -703,10 +720,17 @@
        <canvas id="tenGodsChartLarge"></canvas>
      </div>
    </div>
+  <!-- 融合图片预览模态层 -->
+  <div id="fusedImageModal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-content" style="max-width: 1000px; display:flex; align-items:center; justify-content:center; background: transparent; box-shadow: none; border: none;">
+      <img id="fusedImageLarge" alt="融合图片预览" style="max-width: 92vw; max-height: 88vh; border-radius: 12px; border: 2px solid rgba(0,0,0,0.08); box-shadow: 0 20px 60px rgba(0,0,0,0.35); display:block;" />
+    </div>
+  </div>
   <script>
          let reportData = null;
      let largeRadarChart = null;
      let largeTenGodsChart = null;
+     let fusedImgEscHandlerBound = false;
 
     // 天干到图片映射（已更新为实际文件名）
     const tianGanToImage = {
@@ -807,7 +831,13 @@
           download.download = `八字天干融合-${new Date().getTime()}.png`;
         }
         result.style.display = 'block';
-        
+        // 绑定点击放大预览
+        const fusedImg = document.getElementById('fusedImage');
+        if (fusedImg) {
+          fusedImg.style.cursor = 'zoom-in';
+          fusedImg.onclick = () => openFusedImageModal(url);
+        }
+ 
         // 恢复按钮状态
         btn.innerHTML = '🎨 重新生成';
         btn.disabled = false;
@@ -837,6 +867,31 @@
     }
 
     // 规范化中文标点：移除句末标点后的多余逗号等，如 “。，”、“。，”
+    // 融合图片预览（缺失函数补充）
+    function openFusedImageModal(src){
+      const modal = document.getElementById('fusedImageModal');
+      const img = document.getElementById('fusedImageLarge');
+      if (!modal || !img) return;
+      img.src = src || document.getElementById('fusedImage')?.src || '';
+      modal.style.display = 'flex';
+      modal.onclick = (e) => { if (e.target === modal) closeFusedImageModal(); };
+      if (!fusedImgEscHandlerBound){
+        document.addEventListener('keydown', fusedImgEscHandler);
+        fusedImgEscHandlerBound = true;
+      }
+    }
+    function fusedImgEscHandler(e){ if (e.key === 'Escape') closeFusedImageModal(); }
+    function closeFusedImageModal(){
+      const modal = document.getElementById('fusedImageModal');
+      if (modal) modal.style.display = 'none';
+      if (fusedImgEscHandlerBound){
+        document.removeEventListener('keydown', fusedImgEscHandler);
+        fusedImgEscHandlerBound = false;
+      }
+    }
+
+    
+    
     function sanitizeChinesePunctuation(text){
       if(typeof text !== 'string') return text;
       let t = text;
